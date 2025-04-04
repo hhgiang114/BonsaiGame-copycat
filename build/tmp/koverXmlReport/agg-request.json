@@ -1,0 +1,20 @@
+{
+  "reports": [{"ic": "/Users/gianghoang/Desktop/Projekt2/build/kover/test.ic"}],
+  "modules": [{
+      "sources": [
+        "/Users/gianghoang/Desktop/Projekt2/src/main/resources",
+        "/Users/gianghoang/Desktop/Projekt2/src/main/kotlin"
+      ],
+      "output": ["/Users/gianghoang/Desktop/Projekt2/build/classes/kotlin/main"]
+    }],
+  "result": [{
+      "aggregatedReportFile": "/Users/gianghoang/Desktop/Projekt2/build/tmp/koverXmlReport/agg-ic.ic",
+      "smapFile": "/Users/gianghoang/Desktop/Projekt2/build/tmp/koverXmlReport/agg-smap.smap",
+      "filters": {"exclude": {"classes": [
+            "gui\\..*",
+            "entity\\..*",
+            ".*MainKt.*",
+            "service\\.bot\\..*"
+          ]}}
+    }]
+}

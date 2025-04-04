@@ -1,0 +1,516 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: GameService (service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    78,9%
+  </span>
+  <span class="absValue">
+    (56/71)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (147/147)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99%
+  </span>
+  <span class="absValue">
+    (1028/1038)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameService$showWinner$$inlined$compareByDescending$1</td>
+    <td class="coverageStat"/>
+  </tr>
+  <tr>
+    <td class="name">GameService$showWinner$$inlined$thenByDescending$1</td>
+    <td class="coverageStat"/>
+  </tr>
+  <tr>
+    <td class="name">GameService$WhenMappings</td>
+    <td class="coverageStat"/>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    78,9%
+  </span>
+  <span class="absValue">
+    (56/71)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (147/147)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99%
+  </span>
+  <span class="absValue">
+    (1028/1038)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;//import edu.udo.cs.sopra.ntf.*
+&nbsp;
+&nbsp;//import edu.udo.cs.sopra.ntf.StartGameMessage
+&nbsp;import entity.*
+&nbsp;import util.ZenCardLoader
+&nbsp;//import util.getEmptyTiles
+&nbsp;
+&nbsp;/**
+&nbsp; * Service layer class that provides the logic for actions taken by the System during the game.
+&nbsp; */
+<b class="fc">&nbsp;class GameService(private val rootService: RootService) : AbstractRefreshingService() {</b>
+&nbsp;    /**
+&nbsp;     * Starts a new game with:
+&nbsp;     * - players
+&nbsp;     * - specified player order and
+&nbsp;     * - decide if network game or local game
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - There is no existing game.
+&nbsp;     * - player must set their names and player order.
+&nbsp;     * - must decide if played online or local.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - Game started.
+&nbsp;     *
+&nbsp;     * @param playerOrder List of ordered players that are playing this game.
+&nbsp;     * @param playerOrder A list of Players deciding the player order.
+&nbsp;     * @param networkGame true if game is played online otherwise false.
+&nbsp;     */
+&nbsp;    fun startNewGame(
+&nbsp;        playerOrder: MutableList&lt;Player&gt;,
+&nbsp;        networkGame: Boolean,
+&nbsp;        goalTilesEntries: MutableList&lt;GoalTileType&gt;
+&nbsp;    ) {
+&nbsp;        // check required conditions
+<b class="pc">&nbsp;        require(playerOrder.size &gt;= 2) { &quot;at least 2 Players&quot; }</b>
+<b class="pc">&nbsp;        require(goalTilesEntries.size == 3) { &quot;Exactly 3 goal tiles must be selected.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val playerColors = playerOrder.map { it.color }</b>
+<b class="pc">&nbsp;        require(playerColors.distinct().size == playerColors.size) { &quot;All players must have unique colors.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        var zenDeck = mutableListOf&lt;Card&gt;()</b>
+<b class="fc">&nbsp;        val faceUpCards = mutableListOf&lt;Card&gt;()</b>
+<b class="fc">&nbsp;        if (rootService.networkService.connectionState != ConnectionState.WAITING_FOR_INIT) {</b>
+&nbsp;            // create the zenDeck depending on the number of players
+<b class="fc">&nbsp;            zenDeck = ZenCardLoader().readAllZenCards(playerOrder.size).shuffled().toMutableList()</b>
+&nbsp;            // put the first 4 cards face up
+<b class="fc">&nbsp;            faceUpCards.addAll(zenDeck.takeLast(4))</b>
+<b class="fc">&nbsp;            repeat(4) {zenDeck.removeLast()}</b>
+&nbsp;        }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        val gameState = BonsaiGameState(</b>
+<b class="fc">&nbsp;            currentPlayer = playerOrder.first(),</b>
+<b class="fc">&nbsp;            players = playerOrder,</b>
+<b class="fc">&nbsp;            1,</b>
+<b class="fc">&nbsp;            currentState = States.START_TURN</b>
+&nbsp;        )
+&nbsp;
+&nbsp;        // create the list of goalTiles
+<b class="fc">&nbsp;        gameState.goalTiles = createGoalTiles(goalTilesEntries, playerOrder.size)</b>
+&nbsp;        // assign the created zenDeck to the zenDeck of the game
+<b class="fc">&nbsp;        gameState.zenDeck = zenDeck</b>
+&nbsp;        // assign the face-up cards list to the game face-up cards
+<b class="fc">&nbsp;        gameState.faceUpCards = faceUpCards</b>
+&nbsp;
+&nbsp;        // give each player the post Tiles depending on the order
+<b class="fc">&nbsp;        gameState.players.forEachIndexed { index, player -&gt;</b>
+<b class="fc">&nbsp;            val tiles = mutableListOf&lt;TileType&gt;()</b>
+&nbsp;
+<b class="fc">&nbsp;            if (index == 0) {</b>
+<b class="fc">&nbsp;                tiles.add(TileType.WOOD)</b>
+&nbsp;
+&nbsp;                //TODO() for guiteing
+&nbsp;                /*tiles.add(TileType.LEAF)
+&nbsp;                tiles.add(TileType.LEAF)
+&nbsp;                tiles.add(TileType.LEAF)
+&nbsp;                tiles.add(TileType.FRUIT)
+&nbsp;                repeat(8) {tiles.add(TileType.WOOD)}
+&nbsp;
+&nbsp;
+&nbsp;                 */
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;            } else {
+<b class="fc">&nbsp;                tiles.add(TileType.WOOD)</b>
+<b class="fc">&nbsp;                tiles.add(TileType.LEAF)</b>
+&nbsp;
+<b class="fc">&nbsp;                if (index &gt;= 2) tiles.add(TileType.FLOWER)</b>
+<b class="fc">&nbsp;                if (index &gt;= 3) tiles.add(TileType.FRUIT)</b>
+&nbsp;            }
+<b class="fc">&nbsp;            player.personalSupply.addAll(tiles.map { Tile(null, null, it) })</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // add the new game state to the history
+<b class="fc">&nbsp;        val setHistory = History().apply { gameStates.add(gameState) }</b>
+&nbsp;
+<b class="fc">&nbsp;        val game = BonsaiGame().apply {</b>
+<b class="fc">&nbsp;            history = setHistory</b>
+<b class="fc">&nbsp;            currentBonsaiGameState = gameState</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        rootService.currentGame = game</b>
+&nbsp;
+<b class="fc">&nbsp;        if (!networkGame) onAllRefreshables { refreshAfterGameStart() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Switches the turn to the next player. Assuming player list is in correct turn order
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - Current player has ended his turn.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - The current player switched to the next player.
+&nbsp;     */
+&nbsp;    fun switchPlayerTurn() {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val currentIndex = gameState.players.indexOf(gameState.currentPlayer)</b>
+&nbsp;
+&nbsp;        // get next player in the list, looping back to the first player at end of the list
+<b class="fc">&nbsp;        val nextIndex = (currentIndex + 1) % gameState.players.size</b>
+<b class="fc">&nbsp;        gameState.currentPlayer = gameState.players[nextIndex]</b>
+&nbsp;
+&nbsp;        // refreshes here and not in endTurn
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterEndTurn() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * refreshes with a list of the best placed players in order
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - Zen deck is empty and all players played their last action.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - a refresh with the player order was used, where the winning player is at index 0,
+&nbsp;     * second place is at index 1 etc.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if game isn&#39;t over yet.
+&nbsp;     */
+&nbsp;    fun showWinner() : List&lt;Player&gt; {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="fc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        if (gameState.endGameCounter != gameState.players.size) {</b>
+<b class="fc">&nbsp;            throw IllegalStateException(&quot;Game is not over yet.&quot;)</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Get the order of players by score with tiebreak included
+<b class="fc">&nbsp;        val winnerOrder = gameState.players.sortedWith(compareByDescending&lt;Player&gt; { it.score }</b>
+<b class="fc">&nbsp;            .thenByDescending { gameState.players.indexOf(it) })</b>
+&nbsp;
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterShowWinner(winnerOrder) }</b>
+<b class="fc">&nbsp;        return winnerOrder.toList()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the score of the current player.
+&nbsp;     */
+&nbsp;    fun calculateScore(player: Player): List&lt;Int&gt; {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+&nbsp;
+&nbsp;        //val player = gameState.currentPlayer
+<b class="fc">&nbsp;        val playersBonsaiTree = player.bonsaiTree</b>
+<b class="fc">&nbsp;        val playersCollectedCards = player.collectedCards</b>
+<b class="fc">&nbsp;        val claimGoals = player.claimedGoals</b>
+&nbsp;
+&nbsp;        // Calculate score for each tile
+<b class="fc">&nbsp;        val leaf = countTilesType(playersBonsaiTree, TileType.LEAF)</b>
+<b class="fc">&nbsp;        val fruit = countTilesType(playersBonsaiTree, TileType.FRUIT)</b>
+&nbsp;
+<b class="fc">&nbsp;        val scoreOfLeaf = leaf * 3</b>
+<b class="fc">&nbsp;        val scoreOfFlower = calculateFlowerPoints(playersBonsaiTree)</b>
+<b class="fc">&nbsp;        val scoreOfFruit = fruit * 7</b>
+&nbsp;
+<b class="fc">&nbsp;        val scoreTiles = scoreOfLeaf + scoreOfFlower + scoreOfFruit</b>
+&nbsp;
+&nbsp;        // Calculate score for parchment
+<b class="fc">&nbsp;        var scoreParchment = 0</b>
+&nbsp;
+&nbsp;        // Filter all parchment cards
+<b class="fc">&nbsp;        val parchmentCards = playersCollectedCards.filterIsInstance&lt;ParchmentCard&gt;()</b>
+&nbsp;
+<b class="fc">&nbsp;        for (parchment in parchmentCards) {</b>
+<b class="fc">&nbsp;            val basePoints = parchment.basePoints</b>
+&nbsp;
+&nbsp;            // If parchment is based on TileType
+<b class="fc">&nbsp;            parchment.parchmentTileType?.let { tileType -&gt;</b>
+<b class="fc">&nbsp;                val tileCount = countTilesType(playersBonsaiTree, tileType)</b>
+<b class="fc">&nbsp;                val points = tileCount * basePoints</b>
+<b class="fc">&nbsp;                scoreParchment += points</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;
+&nbsp;            // If parchment is based on CardType
+<b class="fc">&nbsp;            parchment.parchmentCardType?.let { cardType -&gt;</b>
+<b class="fc">&nbsp;                val cardCount = countZenCardType(playersCollectedCards, cardType)</b>
+<b class="fc">&nbsp;                val points = cardCount * basePoints</b>
+<b class="fc">&nbsp;                scoreParchment += points</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Calculate score for Goal
+<b class="fc">&nbsp;        val scoreOfGoal = claimGoals.sumOf { it.score }</b>
+&nbsp;
+&nbsp;        // Total
+<b class="fc">&nbsp;        val total = scoreTiles + scoreParchment + scoreOfGoal</b>
+&nbsp;
+<b class="fc">&nbsp;        return listOf(scoreOfLeaf, scoreOfFruit, scoreOfFlower, scoreOfGoal, scoreParchment, total)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Help functions for calculating score
+&nbsp;
+&nbsp;    private fun countTilesType(bonsaiTree: MutableMap&lt;Pair&lt;Int, Int&gt;, Tile&gt;, type: TileType): Int {
+<b class="fc">&nbsp;        return bonsaiTree.values.count { it.tileType == type }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun countZenCardType(collectedZenCard: MutableList&lt;Card&gt;, type: CardType): Int {
+<b class="fc">&nbsp;        return collectedZenCard.count { it.cardType == type }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun calculateFlowerPoints(bonsaiTree: Map&lt;Pair&lt;Int, Int&gt;, Tile&gt;): Int {
+<b class="fc">&nbsp;        var totalPoints = 0</b>
+&nbsp;
+<b class="fc">&nbsp;        for ((position, tile) in bonsaiTree) {</b>
+<b class="fc">&nbsp;            if (tile.tileType == TileType.FLOWER) {</b>
+<b class="fc">&nbsp;                val (q, r) = position</b>
+&nbsp;
+&nbsp;                // Define neighbor positions
+<b class="fc">&nbsp;                val neighbors = listOf(</b>
+<b class="fc">&nbsp;                    Pair(q + 1, r),</b>
+<b class="fc">&nbsp;                    Pair(q, r + 1),</b>
+<b class="fc">&nbsp;                    Pair(q - 1, r + 1),</b>
+<b class="fc">&nbsp;                    Pair(q - 1, r),</b>
+<b class="fc">&nbsp;                    Pair(q, r - 1),</b>
+<b class="fc">&nbsp;                    Pair(q + 1, r - 1)</b>
+&nbsp;                )
+&nbsp;
+&nbsp;                // Count sides that are NOT touching other tiles
+<b class="fc">&nbsp;                val emptySides = neighbors.count { neighborPos -&gt; !bonsaiTree.containsKey(neighborPos) }</b>
+&nbsp;
+&nbsp;                // Add points (1 point per empty side)
+<b class="fc">&nbsp;                totalPoints += emptySides</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return totalPoints</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Refills the board after a player has meditated.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - player has meditated.
+&nbsp;     * - zen deck is not empty.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - all zen decks got shifted to the right side and
+&nbsp;     * empty spot gets filled by zen deck.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if zen deck is empty.
+&nbsp;     */
+&nbsp;    fun refillBoard() {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+&nbsp;
+<b class="pc">&nbsp;        if (gameState.zenDeck.isEmpty()) {</b>
+&nbsp;            //throw IllegalStateException(&quot;Zen deck is empty.&quot;)
+&nbsp;            return
+&nbsp;        }
+&nbsp;
+<b class="pc">&nbsp;        if (gameState.faceUpCards.size &lt; 4) {</b>
+<b class="fc">&nbsp;            val newCard = gameState.zenDeck.removeLast()</b>
+<b class="fc">&nbsp;            gameState.faceUpCards.add(0, newCard)</b>
+&nbsp;        }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterChooseCard() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * TODO needs to be checked by network, if tiers are correct
+&nbsp;     */
+&nbsp;    fun createGoalTiles(goalTilesTypesEntries: MutableList&lt;GoalTileType&gt;, playerSize: Int)
+&nbsp;            : MutableList&lt;GoalTile&gt; {
+&nbsp;
+<b class="fc">&nbsp;        val goalTiles: MutableList&lt;MutableList&lt;GoalTile&gt;&gt; = mutableListOf()</b>
+&nbsp;
+<b class="fc">&nbsp;        val brownGoalTiles = mutableListOf(</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.BROWN, 0, 5),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.BROWN, 1, 10),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.BROWN, 2, 15)</b>
+&nbsp;        )
+<b class="fc">&nbsp;        val greenGoalTiles = mutableListOf(</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.GREEN, 0, 6),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.GREEN, 1, 9),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.GREEN, 2, 12)</b>
+&nbsp;        )
+<b class="fc">&nbsp;        val pinkGoalTiles = mutableListOf(</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.PINK, 0, 8),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.PINK, 1, 12),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.PINK, 2, 16)</b>
+&nbsp;        )
+<b class="fc">&nbsp;        val orangeGoalTiles = mutableListOf(</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.ORANGE, 0, 9),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.ORANGE, 1, 11),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.ORANGE, 2, 13)</b>
+&nbsp;        )
+<b class="fc">&nbsp;        val blueGoalTiles = mutableListOf(</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.BLUE, 0, 9),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.BLUE, 1, 11),</b>
+<b class="fc">&nbsp;            GoalTile(GoalTileType.BLUE, 2, 13)</b>
+&nbsp;        )
+&nbsp;
+<b class="fc">&nbsp;        goalTilesTypesEntries.forEach { goalTileType -&gt;</b>
+<b class="fc">&nbsp;            run {</b>
+<b class="fc">&nbsp;                when (goalTileType) {</b>
+<b class="fc">&nbsp;                    GoalTileType.BROWN -&gt; goalTiles.add(brownGoalTiles)</b>
+<b class="fc">&nbsp;                    GoalTileType.GREEN -&gt; goalTiles.add(greenGoalTiles)</b>
+<b class="fc">&nbsp;                    GoalTileType.PINK -&gt; goalTiles.add(pinkGoalTiles)</b>
+<b class="fc">&nbsp;                    GoalTileType.ORANGE -&gt; goalTiles.add(orangeGoalTiles)</b>
+<b class="fc">&nbsp;                    GoalTileType.BLUE -&gt; goalTiles.add(blueGoalTiles)</b>
+&nbsp;                }
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        if (playerSize == 2) {</b>
+<b class="fc">&nbsp;            goalTiles.forEach { goalTile -&gt;</b>
+<b class="fc">&nbsp;                run {</b>
+<b class="fc">&nbsp;                    goalTile.removeAt(1)</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return goalTiles.flatten().toMutableList()</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

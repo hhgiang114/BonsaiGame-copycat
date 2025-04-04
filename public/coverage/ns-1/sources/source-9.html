@@ -1,0 +1,301 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > NetworkExtentionsKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: NetworkExtentionsKt (service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">NetworkExtentionsKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (35/35)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (44/44)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (147/147)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NetworkExtentionsKt$WhenMappings</td>
+    <td class="coverageStat"/>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (35/35)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (44/44)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (147/147)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;import edu.udo.cs.sopra.ntf.*
+&nbsp;import entity.*
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [ColorTypeMessage] to a [ColorType].
+&nbsp; *
+&nbsp; * @return Corresponding [ColorType] value.
+&nbsp; */
+&nbsp;fun ColorTypeMessage.toColor(): ColorType {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        ColorTypeMessage.BLUE -&gt; ColorType.BLUE</b>
+<b class="fc">&nbsp;        ColorTypeMessage.PURPLE -&gt; ColorType.PURPLE</b>
+<b class="fc">&nbsp;        ColorTypeMessage.BLACK -&gt; ColorType.BLACK</b>
+<b class="fc">&nbsp;        ColorTypeMessage.RED -&gt; ColorType.RED</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [ColorType] to a [ColorTypeMessage].
+&nbsp; *
+&nbsp; * @return Corresponding [ColorTypeMessage] value.
+&nbsp; */
+&nbsp;fun ColorType.toColorMessage(): ColorTypeMessage {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        ColorType.BLUE -&gt; ColorTypeMessage.BLUE</b>
+<b class="fc">&nbsp;        ColorType.RED -&gt; ColorTypeMessage.RED</b>
+<b class="fc">&nbsp;        ColorType.PURPLE -&gt; ColorTypeMessage.PURPLE</b>
+<b class="fc">&nbsp;        ColorType.BLACK -&gt; ColorTypeMessage.BLACK</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [TileTypeMessage] to a [TileType].
+&nbsp; *
+&nbsp; * @return Corresponding [TileType] value.
+&nbsp; */
+&nbsp;fun TileTypeMessage.toTileType(): TileType {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        TileTypeMessage.LEAF -&gt; TileType.LEAF</b>
+<b class="fc">&nbsp;        TileTypeMessage.WOOD -&gt; TileType.WOOD</b>
+<b class="fc">&nbsp;        TileTypeMessage.FLOWER -&gt; TileType.FLOWER</b>
+<b class="fc">&nbsp;        TileTypeMessage.FRUIT -&gt; TileType.FRUIT</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [TileType] to a [TileTypeMessage].
+&nbsp; *
+&nbsp; * @return Corresponding [TileTypeMessage] value.
+&nbsp; */
+&nbsp;fun TileType.toTileTypeMessage(): TileTypeMessage {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        TileType.LEAF -&gt; TileTypeMessage.LEAF</b>
+<b class="fc">&nbsp;        TileType.WOOD -&gt; TileTypeMessage.WOOD</b>
+<b class="fc">&nbsp;        TileType.FLOWER -&gt; TileTypeMessage.FLOWER</b>
+<b class="fc">&nbsp;        else -&gt; TileTypeMessage.FRUIT</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [CardTypeMessage] to a [CardType].
+&nbsp; *
+&nbsp; * @return Corresponding [CardType] value.
+&nbsp; */
+&nbsp;fun CardTypeMessage.toCardType(): CardType {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        CardTypeMessage.TOOL -&gt; CardType.TOOLCARD</b>
+<b class="fc">&nbsp;        CardTypeMessage.GROWTH -&gt; CardType.GROWTHCARD</b>
+<b class="fc">&nbsp;        CardTypeMessage.PARCHMENT -&gt; CardType.PARCHMENTCARD</b>
+<b class="fc">&nbsp;        CardTypeMessage.HELPER -&gt; CardType.HELPERCARD</b>
+<b class="fc">&nbsp;        CardTypeMessage.MASTER -&gt; CardType.MASTERCARD</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Extension function to convert a [CardType] to a [CardTypeMessage].
+&nbsp; *
+&nbsp; * @return Corresponding [CardTypeMessage] value.
+&nbsp; */
+&nbsp;fun CardType.toCardTypeMessage(): CardTypeMessage {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        CardType.TOOLCARD -&gt; CardTypeMessage.TOOL</b>
+<b class="fc">&nbsp;        CardType.GROWTHCARD -&gt; CardTypeMessage.GROWTH</b>
+<b class="fc">&nbsp;        CardType.HELPERCARD -&gt; CardTypeMessage.HELPER</b>
+<b class="fc">&nbsp;        CardType.MASTERCARD -&gt; CardTypeMessage.MASTER</b>
+<b class="fc">&nbsp;        CardType.PARCHMENTCARD -&gt; CardTypeMessage.PARCHMENT</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [GoalTileTypeMessage] to a [GoalTileType].
+&nbsp; *
+&nbsp; * @return Corresponding [GoalTileType] value.
+&nbsp; */
+&nbsp;fun GoalTileTypeMessage.toGoalTileType(): GoalTileType {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        GoalTileTypeMessage.BLUE -&gt; GoalTileType.BLUE</b>
+<b class="fc">&nbsp;        GoalTileTypeMessage.GREEN -&gt; GoalTileType.GREEN</b>
+<b class="fc">&nbsp;        GoalTileTypeMessage.BROWN -&gt; GoalTileType.BROWN</b>
+<b class="fc">&nbsp;        GoalTileTypeMessage.PINK -&gt; GoalTileType.PINK</b>
+<b class="fc">&nbsp;        GoalTileTypeMessage.ORANGE -&gt; GoalTileType.ORANGE</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Function to convert a [GoalTileType] to a [GoalTileTypeMessage].
+&nbsp; *
+&nbsp; * @return Corresponding [GoalTileTypeMessage] value.
+&nbsp; */
+&nbsp;fun GoalTileType.toGoalTileTypeMessage(): GoalTileTypeMessage {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        GoalTileType.BLUE -&gt; GoalTileTypeMessage.BLUE</b>
+<b class="fc">&nbsp;        GoalTileType.BROWN -&gt; GoalTileTypeMessage.BROWN</b>
+<b class="fc">&nbsp;        GoalTileType.GREEN -&gt; GoalTileTypeMessage.GREEN</b>
+<b class="fc">&nbsp;        GoalTileType.PINK -&gt; GoalTileTypeMessage.PINK</b>
+<b class="fc">&nbsp;        GoalTileType.ORANGE -&gt; GoalTileTypeMessage.ORANGE</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Data class representing a mutable meditate message with the necessary parameters
+&nbsp; * for transmitting meditation-related actions in the game.
+&nbsp; */
+&nbsp;data class MutableMeditateMessage(
+&nbsp;    val removedTilesAxialCoordinates: MutableList&lt;Pair&lt;Int, Int&gt;&gt;,
+&nbsp;    var chosenCardPosition: Int,
+&nbsp;    val playedTiles: MutableList&lt;Pair&lt;TileType, Pair&lt;Int, Int&gt;&gt;&gt;,
+&nbsp;    val drawnTiles: MutableList&lt;TileType&gt;,
+&nbsp;    val claimedGoals: MutableList&lt;Pair&lt;GoalTileType, Int&gt;&gt;,
+&nbsp;    val renouncedGoals: MutableList&lt;Pair&lt;GoalTileType, Int&gt;&gt;,
+&nbsp;    val discardedTiles: MutableList&lt;TileType&gt;
+&nbsp;)
+&nbsp;
+&nbsp;/**
+&nbsp; * Data class representing a mutable cultivate message with the necessary parameters
+&nbsp; * for transmitting cultivation-related actions in the game.
+&nbsp; */
+&nbsp;data class MutableCultivateMessage(
+&nbsp;    val removedTilesAxialCoordinates: MutableList&lt;Pair&lt;Int, Int&gt;&gt;,
+&nbsp;    val playedTiles: MutableList&lt;Pair&lt;TileType, Pair&lt;Int, Int&gt;&gt;&gt;,
+&nbsp;    val claimedGoals: MutableList&lt;Pair&lt;GoalTileType, Int&gt;&gt;,
+&nbsp;    val renouncedGoals: MutableList&lt;Pair&lt;GoalTileType, Int&gt;&gt;
+&nbsp;)
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

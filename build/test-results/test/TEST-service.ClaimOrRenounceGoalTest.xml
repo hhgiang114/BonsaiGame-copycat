@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.ClaimOrRenounceGoalTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:30" hostname="Giang-Hoangs.local" time="0.006">
+  <properties/>
+  <testcase name="testClaimAfterRenounce()" classname="service.ClaimOrRenounceGoalTest" time="0.001"/>
+  <testcase name="testGoalTileBrownT0()" classname="service.ClaimOrRenounceGoalTest" time="0.001"/>
+  <testcase name="testGoalTileGreenT0()" classname="service.ClaimOrRenounceGoalTest" time="0.001"/>
+  <testcase name="testGoalTileGreenT1()" classname="service.ClaimOrRenounceGoalTest" time="0.001"/>
+  <testcase name="testClaimTilesInvalid()" classname="service.ClaimOrRenounceGoalTest" time="0.0"/>
+  <testcase name="testGoalTileRenounce()" classname="service.ClaimOrRenounceGoalTest" time="0.0"/>
+  <testcase name="testGoalTileGreenT1withT0()" classname="service.ClaimOrRenounceGoalTest" time="0.0"/>
+  <testcase name="testGoalTileBlueT0()" classname="service.ClaimOrRenounceGoalTest" time="0.0"/>
+  <testcase name="testGoalTilePinkT0()" classname="service.ClaimOrRenounceGoalTest" time="0.0"/>
+  <testcase name="testGoalTileOrangeT0()" classname="service.ClaimOrRenounceGoalTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

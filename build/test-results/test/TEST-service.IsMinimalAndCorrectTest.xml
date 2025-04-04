@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.IsMinimalAndCorrectTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:31" hostname="Giang-Hoangs.local" time="0.003">
+  <properties/>
+  <testcase name="test isMinimal()" classname="service.IsMinimalAndCorrectTest" time="0.001"/>
+  <testcase name="test another time ()" classname="service.IsMinimalAndCorrectTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

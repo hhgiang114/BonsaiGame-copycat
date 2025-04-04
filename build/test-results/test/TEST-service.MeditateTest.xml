@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.MeditateTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:31" hostname="Giang-Hoangs.local" time="0.016">
+  <properties/>
+  <testcase name="test draw the card in position 0()" classname="service.MeditateTest" time="0.0"/>
+  <testcase name="test draw the card in position 1()" classname="service.MeditateTest" time="0.003"/>
+  <testcase name="test draw the card in position 2()" classname="service.MeditateTest" time="0.002"/>
+  <testcase name="test draw the card in position 3()" classname="service.MeditateTest" time="0.009"/>
+  <system-out><![CDATA[[ANY, WOOD, LEAF]
+[ANY, WOOD, LEAF]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

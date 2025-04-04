@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.RootServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:58" hostname="Giang-Hoangs.local" time="0.024">
+  <properties/>
+  <testcase name="testAddRefreshable()" classname="service.RootServiceTest" time="0.006"/>
+  <testcase name="testAddMultipleRefreshables()" classname="service.RootServiceTest" time="0.013"/>
+  <system-out><![CDATA[[INFO] Received message: {"@class":"tools.aqua.bgw.net.common.response.CreateGameResponse","status":"SESSION_WITH_ID_ALREADY_EXISTS","sessionID":null}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.EndTurnTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:31" hostname="Giang-Hoangs.local" time="0.012">
+  <properties/>
+  <testcase name="testEndTurnCounterNotEqualPlayerSize()" classname="service.EndTurnTest" time="0.002"/>
+  <testcase name="testEndTurnStateChange()" classname="service.EndTurnTest" time="0.001"/>
+  <testcase name="testEndTurnZenDeckEmpty()" classname="service.EndTurnTest" time="0.0"/>
+  <testcase name="testEndTurnHistory()" classname="service.EndTurnTest" time="0.0"/>
+  <testcase name="testEndTurnNotLastRound()" classname="service.EndTurnTest" time="0.0"/>
+  <testcase name="testEndTurnEndGame()" classname="service.EndTurnTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

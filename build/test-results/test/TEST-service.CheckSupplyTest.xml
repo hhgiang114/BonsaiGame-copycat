@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.CheckSupplyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:30" hostname="Giang-Hoangs.local" time="0.002">
+  <properties/>
+  <testcase name="checkSupply should mark player as played when player has tiles within capacity()" classname="service.CheckSupplyTest" time="0.001"/>
+  <testcase name="checkSupply should set state to DISCARDING when player has more tiles than capacity()" classname="service.CheckSupplyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

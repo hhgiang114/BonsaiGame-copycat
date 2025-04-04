@@ -1,0 +1,289 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CSVParchmentCardEntry</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">util</a>
+</div>
+
+<h1>Coverage Summary for Class: CSVParchmentCardEntry (util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">CSVParchmentCardEntry</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (17/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package util
+&nbsp;
+&nbsp;import entity.*
+&nbsp;
+&nbsp;/**
+&nbsp; * this class is to create the zenDeck
+&nbsp; * usage sees [readAllZenCards]
+&nbsp; *
+&nbsp; * the private functions read the csv files then map the data class to our zenCard
+&nbsp; * at the end it returns a list of the chosen cards
+&nbsp; */
+&nbsp;class ZenCardLoader {
+&nbsp;    val csvLoader = CSVLoader()
+&nbsp;
+&nbsp;    private fun readAllGrowthCards(playerAmount: Int): List&lt;GrowthCard&gt; {
+&nbsp;        return csvLoader.readCsvFile&lt;CSVGrowthCardEntry&gt;(&quot;/zengrowth.csv&quot;).mapNotNull {
+&nbsp;            val type = when (it.type) {
+&nbsp;                &quot;log&quot; -&gt; TileType.WOOD
+&nbsp;                &quot;leaf&quot; -&gt; TileType.LEAF
+&nbsp;                &quot;blossom&quot; -&gt; TileType.FLOWER
+&nbsp;                else -&gt; TileType.FRUIT
+&nbsp;            }
+&nbsp;
+&nbsp;            val result = if (playerAmount &lt; it.minPlayerAmount) {
+&nbsp;                null
+&nbsp;            } else {
+&nbsp;                GrowthCard(type, it.id)
+&nbsp;            }
+&nbsp;            result
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun readAllHelperCards(): List&lt;HelperCard&gt; {
+&nbsp;        return csvLoader.readCsvFile&lt;CSVHelperCardEntry&gt;(&quot;/zenhelper.csv&quot;).map {
+&nbsp;            val type = when (it.type2) {
+&nbsp;                &quot;log&quot; -&gt; TileType.WOOD
+&nbsp;                &quot;leaf&quot; -&gt; TileType.LEAF
+&nbsp;                &quot;blossom&quot; -&gt; TileType.FLOWER
+&nbsp;                else -&gt; TileType.FRUIT
+&nbsp;            }
+&nbsp;            HelperCard(type, it.id)
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun readAllMasterCards(playerAmount: Int): List&lt;MasterCard&gt; {
+&nbsp;        return csvLoader.readCsvFile&lt;CSVMasterCardEntry&gt;(&quot;/zenmaster.csv&quot;).mapNotNull { cardEntry -&gt;
+&nbsp;            val tileTypes = mutableListOf(
+&nbsp;                getType1(cardEntry), getType2(cardEntry), getType3(cardEntry))
+&nbsp;
+&nbsp;            tileTypes.removeAll {
+&nbsp;                it == TileType.EMPTY
+&nbsp;            }
+&nbsp;
+&nbsp;            val result = if (playerAmount &lt; cardEntry.minPlayerAmount) {
+&nbsp;                null
+&nbsp;            } else {
+&nbsp;                MasterCard(tileTypes, cardEntry.id)
+&nbsp;            }
+&nbsp;            result
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun readAllParchmentCards(): List&lt;ParchmentCard&gt; {
+&nbsp;        return csvLoader.readCsvFile&lt;CSVParchmentCardEntry&gt;(&quot;/zenparchment.csv&quot;).map {
+&nbsp;            val cardType = when (it.targetType) {
+&nbsp;                &quot;master&quot; -&gt; CardType.MASTERCARD
+&nbsp;                &quot;growth&quot; -&gt; CardType.GROWTHCARD
+&nbsp;                &quot;helper&quot; -&gt; CardType.HELPERCARD
+&nbsp;                else -&gt; null
+&nbsp;            }
+&nbsp;
+&nbsp;            val tileType = when (it.targetType) {
+&nbsp;                &quot;blossom&quot; -&gt; TileType.FLOWER
+&nbsp;                &quot;fruit&quot; -&gt; TileType.FRUIT
+&nbsp;                &quot;leaf&quot; -&gt; TileType.LEAF
+&nbsp;                &quot;log&quot; -&gt; TileType.WOOD
+&nbsp;                else -&gt; null
+&nbsp;            }
+&nbsp;
+&nbsp;            ParchmentCard(tileType, cardType, it.points, it.id)
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun readAllToolCards(playerAmount: Int): List&lt;ToolCard&gt; {
+&nbsp;        return csvLoader.readCsvFile&lt;CSVToolCardEntry&gt;(&quot;/zentool.csv&quot;).mapNotNull {
+&nbsp;            val result = if (playerAmount &lt; it.minPlayerAmount) {
+&nbsp;                null
+&nbsp;            } else {
+&nbsp;                ToolCard(it.id)
+&nbsp;            }
+&nbsp;            result
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * this function returns a [List] of [Card] for a given amount of [playerAmount]
+&nbsp;     *
+&nbsp;     * @param [playerAmount] of how many players are there in the game
+&nbsp;     */
+&nbsp;    fun readAllZenCards(playerAmount: Int): List&lt;Card&gt; {
+&nbsp;        return readAllGrowthCards(playerAmount) +
+&nbsp;                readAllHelperCards() +
+&nbsp;                readAllMasterCards(playerAmount) +
+&nbsp;                readAllParchmentCards() +
+&nbsp;                readAllToolCards(playerAmount)
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun getType1(cardEntry: CSVMasterCardEntry): TileType {
+&nbsp;        return when (cardEntry.type1) {
+&nbsp;            &quot;log&quot; -&gt; TileType.WOOD
+&nbsp;            &quot;leaf&quot; -&gt; TileType.LEAF
+&nbsp;            else-&gt; TileType.ANY
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun getType2(cardEntry: CSVMasterCardEntry): TileType {
+&nbsp;        return when (cardEntry.type2) {
+&nbsp;            &quot;log&quot; -&gt; TileType.WOOD
+&nbsp;            &quot;leaf&quot; -&gt; TileType.LEAF
+&nbsp;            &quot;blossom&quot; -&gt; TileType.FLOWER
+&nbsp;            &quot;fruit&quot; -&gt; TileType.FRUIT
+&nbsp;            else -&gt; TileType.EMPTY
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun getType3(cardEntry: CSVMasterCardEntry): TileType {
+&nbsp;        return when (cardEntry.type3) {
+&nbsp;            &quot;blossom&quot; -&gt; TileType.FLOWER
+&nbsp;            &quot;fruit&quot; -&gt; TileType.FRUIT
+&nbsp;            else -&gt; TileType.EMPTY
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a CSV entry for a Growth Card.
+&nbsp; */
+&nbsp;data class CSVGrowthCardEntry(
+&nbsp;    val id: Int, val minPlayerAmount: Int, val type: String
+&nbsp;)
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a CSV entry for a Helper Card.
+&nbsp; */
+&nbsp;data class CSVHelperCardEntry(
+&nbsp;    val id: Int, val type1: String, val type2: String
+&nbsp;)
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a CSV entry for a Master Card.
+&nbsp; */
+&nbsp;data class CSVMasterCardEntry(
+&nbsp;    val id: Int, val minPlayerAmount: Int,
+&nbsp;    val type1: String, val type2: String, val type3: String
+&nbsp;)
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a CSV entry for a Parchment Card.
+&nbsp; */
+<b class="fc">&nbsp;data class CSVParchmentCardEntry(</b>
+<b class="fc">&nbsp;    val id: Int, val points: Int, val targetType: String</b>
+&nbsp;)
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a CSV entry for a Tool Card.
+&nbsp; */
+&nbsp;data class CSVToolCardEntry(
+&nbsp;    val id: Int, val minPlayerAmount: Int
+&nbsp;)
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

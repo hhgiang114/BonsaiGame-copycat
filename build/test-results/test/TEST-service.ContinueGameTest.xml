@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.ContinueGameTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:30" hostname="Giang-Hoangs.local" time="0.063">
+  <properties/>
+  <testcase name="testContinueGameInvalid()" classname="service.ContinueGameTest" time="0.001"/>
+  <testcase name="testContinueGame()" classname="service.ContinueGameTest" time="0.059"/>
+  <testcase name="testSaveGameIfPlayerNotLocal()" classname="service.ContinueGameTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,304 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BonsaiNetworkClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: BonsaiNetworkClient (service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">BonsaiNetworkClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55%
+  </span>
+  <span class="absValue">
+    (11/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,1%
+  </span>
+  <span class="absValue">
+    (37/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,7%
+  </span>
+  <span class="absValue">
+    (196/216)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BonsaiNetworkClient$WhenMappings</td>
+    <td class="coverageStat"/>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55%
+  </span>
+  <span class="absValue">
+    (11/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,1%
+  </span>
+  <span class="absValue">
+    (37/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,7%
+  </span>
+  <span class="absValue">
+    (196/216)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;import tools.aqua.bgw.net.client.BoardGameClient
+&nbsp;import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
+&nbsp;import edu.udo.cs.sopra.ntf.*
+&nbsp;import tools.aqua.bgw.core.BoardGameApplication
+&nbsp;import tools.aqua.bgw.net.client.NetworkLogging
+&nbsp;import tools.aqua.bgw.net.common.annotations.GameActionReceiver
+&nbsp;import tools.aqua.bgw.net.common.response.*
+&nbsp;
+&nbsp;/**
+&nbsp; * [BoardGameClient] implementation for network communication.
+&nbsp; *
+&nbsp; * @param networkService the [NetworkService] to potentially forward received messages to.
+&nbsp; */
+&nbsp;class BonsaiNetworkClient(
+&nbsp;    playerName: String,
+&nbsp;    host: String,
+&nbsp;    secret: String,
+<b class="fc">&nbsp;    var networkService: NetworkService</b>
+<b class="fc">&nbsp;) : BoardGameClient(playerName, host, secret, NetworkLogging.VERBOSE) {</b>
+&nbsp;
+&nbsp;    /** the identifier of this game session; can be null if no session started yet. */
+<b class="fc">&nbsp;    var sessionID: String? = null</b>
+&nbsp;
+&nbsp;    /** the name of other players; size = 0 if no message from other players received yet */
+<b class="fc">&nbsp;    var otherPlayerNames: MutableList&lt;String&gt; = mutableListOf()</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handle a [CreateGameResponse] sent by the server. Will await the guest player when its
+&nbsp;     * status is [CreateGameResponseStatus.SUCCESS]. As recovery from network problems is not
+&nbsp;     * implemented in NetWar, the method disconnects from the server and throws an
+&nbsp;     * [IllegalStateException] otherwise.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if status != success or currently not waiting for a game creation response.
+&nbsp;     */
+&nbsp;    override fun onCreateGameResponse(response: CreateGameResponse) {
+<b class="fc">&nbsp;        BoardGameApplication.run {</b>
+<b class="pc">&nbsp;            check(networkService.connectionState == ConnectionState.WAITING_FOR_HOST_CONFIRMATION)</b>
+<b class="nc">&nbsp;            { &quot;unexpected CreateGameResponse&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;            when (response.status) {</b>
+<b class="fc">&nbsp;                CreateGameResponseStatus.SUCCESS -&gt; {</b>
+<b class="fc">&nbsp;                    networkService.updateConnectionState(ConnectionState.WAITING_FOR_GUEST)</b>
+<b class="fc">&nbsp;                    sessionID = response.sessionID</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                else -&gt; disconnectAndError(response.status)</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handle a [JoinGameResponse] sent by the server. Will await the init message when its
+&nbsp;     * status is [JoinGameResponseStatus.SUCCESS]. As recovery from network problems is not
+&nbsp;     * implemented in NetWar, the method disconnects from the server and throws an
+&nbsp;     * [IllegalStateException] otherwise.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if status != success or currently not waiting for a join game response.
+&nbsp;     */
+&nbsp;    override fun onJoinGameResponse(response: JoinGameResponse) {
+<b class="fc">&nbsp;        BoardGameApplication.run {</b>
+<b class="pc">&nbsp;            check(networkService.connectionState == ConnectionState.WAITING_FOR_JOIN_CONFIRMATION)</b>
+<b class="nc">&nbsp;            { &quot;unexpected JoinGameResponse&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;            when (response.status) {</b>
+<b class="pc">&nbsp;                JoinGameResponseStatus.SUCCESS -&gt; {</b>
+<b class="fc">&nbsp;                    sessionID = response.sessionID</b>
+<b class="fc">&nbsp;                    networkService.updateConnectionState((ConnectionState.WAITING_FOR_INIT))</b>
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;                else -&gt; disconnectAndError(response.status)</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handle a [PlayerJoinedNotification] sent by the server. We receive the name from other player
+&nbsp;     * as they joined our lobby
+&nbsp;     * @throws IllegalStateException if not currently expecting any guests to join.
+&nbsp;     * @throws IllegalStateException if there are more than other 3 players.
+&nbsp;     */
+&nbsp;    override fun onPlayerJoined(notification: PlayerJoinedNotification) {
+<b class="fc">&nbsp;        BoardGameApplication.run {</b>
+<b class="pc">&nbsp;            check(networkService.connectionState == ConnectionState.WAITING_FOR_GUEST)</b>
+<b class="nc">&nbsp;            { &quot;not awaiting any guests.&quot; }</b>
+&nbsp;
+<b class="pc">&nbsp;            check(otherPlayerNames.size &lt;= 3)</b>
+<b class="nc">&nbsp;            { &quot;more than 4 players.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;            otherPlayerNames.add(notification.sender)</b>
+<b class="fc">&nbsp;            networkService.receivePlayerJoinedMessage(notification.sender)</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * handle a [StartGameMessage] sent by the server
+&nbsp;     */
+&nbsp;    @Suppress(&quot;UNUSED_PARAMETER&quot;, &quot;unused&quot;)
+&nbsp;    @GameActionReceiver
+&nbsp;    fun onStartGameMessageReceived(message: StartGameMessage, sender: String) {
+<b class="fc">&nbsp;        BoardGameApplication.run {</b>
+<b class="fc">&nbsp;            networkService.receiveStartGameMessage(</b>
+<b class="fc">&nbsp;                message = message</b>
+&nbsp;            )
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;/*
+&nbsp;    override fun onGameActionResponse(response: GameActionResponse) {
+&nbsp;        BoardGameApplication.run {
+&nbsp;            check(networkService.connectionState == ConnectionState.PLAYING_MY_TURN ||
+&nbsp;                    networkService.connectionState == ConnectionState.WAITING_FOR_OPPONENT)
+&nbsp;            { &quot;not currently playing in a network game.&quot;}
+&nbsp;
+&nbsp;            when (response.status) {
+&nbsp;                GameActionResponseStatus.SUCCESS -&gt; {} // do nothing in this case
+&nbsp;                else -&gt; disconnectAndError(response.status)
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;    */
+&nbsp;
+&nbsp;    /**
+&nbsp;     * handle a [CultivateMessage] sent by the server
+&nbsp;     */
+&nbsp;    @Suppress(&quot;UNUSED_PARAMETER&quot;, &quot;unused&quot;)
+&nbsp;    @GameActionReceiver
+&nbsp;    fun onCultivateMessage(message: CultivateMessage, sender: String) {
+<b class="fc">&nbsp;        BoardGameApplication.run {</b>
+<b class="fc">&nbsp;            networkService.receiveCultivateMessage(message)</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * handle a [MeditateMessage] sent by the server
+&nbsp;     */
+&nbsp;    @Suppress(&quot;UNUSED_PARAMETER&quot;, &quot;unused&quot;)
+&nbsp;    @GameActionReceiver
+&nbsp;    fun onMeditateMessage(message: MeditateMessage, sender: String) {
+<b class="fc">&nbsp;        BoardGameApplication.run {</b>
+<b class="fc">&nbsp;            networkService.receiveMeditateMessage(message)</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun disconnectAndError(message: Any) {
+<b class="fc">&nbsp;        networkService.disconnect()</b>
+<b class="fc">&nbsp;        error(message)</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

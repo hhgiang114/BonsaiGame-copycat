@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - NetworkServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>NetworkServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/service.html">service</a> &gt; NetworkServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">11</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">6.570s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+<li>
+<a href="#tab2">Standard error</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testCreateGame()</td>
+<td class="success">0.119s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testDisconnect()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testJoinGame()</td>
+<td class="success">0.044s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testReceiveCultivateMessage()</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testReceiveMeditateMessage()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testReceiveStartGameMessage()</td>
+<td class="success">0.017s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testSendCultivateMessage()</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testSendMeditate()</td>
+<td class="success">6.178s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testSendMeditateMessage()</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testSendStartGameMessage()</td>
+<td class="success">0.210s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testUpdateConnectionState()</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>[INFO] Initializing BoardGameClient on host sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[DEBUG] Initializing annotated receiver functions.
+[INFO] Connecting to ws://sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[INFO] Connection is now open.
+[DEBUG] Connection call succeeded without interruption and returned true.
+[INFO] Requesting creation of new game with ID &quot;Bonsai&quot;, sessionID &quot;1234&quot; and greeting message &quot;Welcome!^_^&quot;.
+[INFO] Sending GameActionMessage edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] Found the following GameActionClasses:
+[DEBUG] edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.MeditateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction
+[DEBUG] Found the following GameActionReceivers:
+[DEBUG] onStartGameMessageReceived
+[DEBUG] onCultivateMessage
+[DEBUG] onMeditateMessage
+[DEBUG] Sending GameAction as JSON: {&quot;orderedPlayerNames&quot;:[{&quot;first&quot;:&quot;Tom&quot;,&quot;second&quot;:&quot;RED&quot;},{&quot;first&quot;:&quot;Tomy&quot;,&quot;second&quot;:&quot;BLUE&quot;},{&quot;first&quot;:&quot;Tomi&quot;,&quot;second&quot;:&quot;BLACK&quot;}],&quot;chosenGoalTiles&quot;:[&quot;BROWN&quot;,&quot;PINK&quot;,&quot;GREEN&quot;],&quot;orderedCards&quot;:[{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:17},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:26},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:22},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:3},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:23},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:7},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:41},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:20},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:29},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:37},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:19},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:27},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:44},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:18},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:21},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:36},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:28},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:15},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:8},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:30},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:42},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:38},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:35},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:0},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:9},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:14},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:5},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:31},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:11},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:39},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:25},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:6},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:40},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:16},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:1},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:2},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:43},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:32},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:4},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:24},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:10},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:34},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:45}]}
+[INFO] Disconnecting.
+[INFO] Connection is now closed.
+[DEBUG] Status code is: 1000. The connection was closed with the following reason: . The closing was initiated by the local host.
+[DEBUG] Disconnection call succeeded without interruption.
+[INFO] Initializing BoardGameClient on host sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[DEBUG] Initializing annotated receiver functions.
+[INFO] Connecting to ws://sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[INFO] Connection is now open.
+[DEBUG] Connection call succeeded without interruption and returned true.
+[INFO] Requesting joining to sessionID 1234. Greeting message is: Welcome!^o^.
+[INFO] Initializing BoardGameClient on host sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[DEBUG] Initializing annotated receiver functions.
+[INFO] Connecting to ws://sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[DEBUG] Found the following GameActionClasses:
+[DEBUG] edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.MeditateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction
+[DEBUG] Found the following GameActionReceivers:
+[DEBUG] onStartGameMessageReceived
+[DEBUG] onCultivateMessage
+[DEBUG] onMeditateMessage
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.response.JoinGameResponse&quot;,&quot;status&quot;:&quot;SUCCESS&quot;,&quot;sessionID&quot;:&quot;1234&quot;,&quot;opponents&quot;:[],&quot;message&quot;:&quot;Welcome!^_^&quot;}
+[DEBUG] Received message of type tools.aqua.bgw.net.common.response.JoinGameResponse@1d4bd13a
+[DEBUG] Received JoinGameResponse. Invoking handler for onJoinGameResponse.
+[INFO] Connection is now open.
+[DEBUG] Connection call succeeded without interruption and returned true.
+[INFO] Requesting creation of new game with ID &quot;Bonsai&quot;, sessionID &quot;21401&quot; and greeting message &quot;Welcome!^_^&quot;.
+[DEBUG] Found the following GameActionClasses:
+[DEBUG] edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.MeditateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction
+[DEBUG] Found the following GameActionReceivers:
+[DEBUG] onStartGameMessageReceived
+[DEBUG] onCultivateMessage
+[DEBUG] onMeditateMessage
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.response.CreateGameResponse&quot;,&quot;status&quot;:&quot;SUCCESS&quot;,&quot;sessionID&quot;:&quot;21401&quot;}
+[DEBUG] Received message of type tools.aqua.bgw.net.common.response.CreateGameResponse@111db327
+[DEBUG] Received CreateGameResponse. Invoking handler for onCreateGameResponse.
+[INFO] Initializing BoardGameClient on host sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[DEBUG] Initializing annotated receiver functions.
+[INFO] Connecting to ws://sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[INFO] Connection is now open.
+[DEBUG] Connection call succeeded without interruption and returned true.
+[INFO] Requesting joining to sessionID 21401. Greeting message is: Welcome!^o^.
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.notification.PlayerJoinedNotification&quot;,&quot;message&quot;:&quot;Welcome!^o^&quot;,&quot;sender&quot;:&quot;HIHI&quot;}
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.response.JoinGameResponse&quot;,&quot;status&quot;:&quot;SUCCESS&quot;,&quot;sessionID&quot;:&quot;21401&quot;,&quot;opponents&quot;:[&quot;Gary&quot;],&quot;message&quot;:&quot;Welcome!^_^&quot;}
+[DEBUG] Received message of type tools.aqua.bgw.net.common.notification.PlayerJoinedNotification@152225dc
+[DEBUG] Received PlayerJoinedNotification. Invoking handler for onPlayerJoined.
+[DEBUG] Received message of type tools.aqua.bgw.net.common.response.JoinGameResponse@748f92d
+[DEBUG] Received JoinGameResponse. Invoking handler for onJoinGameResponse.
+[DEBUG] Found the following GameActionClasses:
+[DEBUG] edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.MeditateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction
+[DEBUG] Found the following GameActionReceivers:
+[DEBUG] onStartGameMessageReceived
+[DEBUG] onCultivateMessage
+[DEBUG] onMeditateMessage
+[INFO] Sending GameActionMessage edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] Sending GameAction as JSON: {&quot;orderedPlayerNames&quot;:[{&quot;first&quot;:&quot;Gary&quot;,&quot;second&quot;:&quot;RED&quot;},{&quot;first&quot;:&quot;HIHI&quot;,&quot;second&quot;:&quot;PURPLE&quot;}],&quot;chosenGoalTiles&quot;:[&quot;BROWN&quot;,&quot;PINK&quot;,&quot;GREEN&quot;],&quot;orderedCards&quot;:[{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:35},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:18},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:16},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:6},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:37},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:5},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:1},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:26},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:19},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:14},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:4},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:38},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:23},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:39},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:15},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:34},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:22},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:25},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:7},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:43},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:40},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:24},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:0},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:3},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:21},{&quot;first&quot;:&quot;GROWTH&quot;,&quot;second&quot;:2},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:42},{&quot;first&quot;:&quot;PARCHMENT&quot;,&quot;second&quot;:36},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:20},{&quot;first&quot;:&quot;HELPER&quot;,&quot;second&quot;:17},{&quot;first&quot;:&quot;TOOL&quot;,&quot;second&quot;:41},{&quot;first&quot;:&quot;MASTER&quot;,&quot;second&quot;:27}]}
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.response.GameActionResponse&quot;,&quot;status&quot;:&quot;SUCCESS&quot;,&quot;errorMessages&quot;:[]}
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.message.GameActionMessage&quot;,&quot;payload&quot;:&quot;{\&quot;orderedPlayerNames\&quot;:[{\&quot;first\&quot;:\&quot;Gary\&quot;,\&quot;second\&quot;:\&quot;RED\&quot;},{\&quot;first\&quot;:\&quot;HIHI\&quot;,\&quot;second\&quot;:\&quot;PURPLE\&quot;}],\&quot;chosenGoalTiles\&quot;:[\&quot;BROWN\&quot;,\&quot;PINK\&quot;,\&quot;GREEN\&quot;],\&quot;orderedCards\&quot;:[{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:35},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:18},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:16},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:6},{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:37},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:5},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:1},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:26},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:19},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:14},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:4},{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:38},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:23},{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:39},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:15},{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:34},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:22},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:25},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:7},{\&quot;first\&quot;:\&quot;TOOL\&quot;,\&quot;second\&quot;:43},{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:40},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:24},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:0},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:3},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:21},{\&quot;first\&quot;:\&quot;GROWTH\&quot;,\&quot;second\&quot;:2},{\&quot;first\&quot;:\&quot;TOOL\&quot;,\&quot;second\&quot;:42},{\&quot;first\&quot;:\&quot;PARCHMENT\&quot;,\&quot;second\&quot;:36},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:20},{\&quot;first\&quot;:\&quot;HELPER\&quot;,\&quot;second\&quot;:17},{\&quot;first\&quot;:\&quot;TOOL\&quot;,\&quot;second\&quot;:41},{\&quot;first\&quot;:\&quot;MASTER\&quot;,\&quot;second\&quot;:27}]}&quot;,&quot;prettyPrint&quot;:&quot;StartGameMessage(\n\torderedPlayerNames=\tGary (RED)\n\tHIHI (PURPLE)\n\tchosenGoalTiles=\tBROWN\n\tPINK\n\tGREEN\n\torderedCards=\tPARCHMENT (35)\n\tHELPER (18)\n\tHELPER (16)\n\tGROWTH (6)\n\tPARCHMENT (37)\n\tGROWTH (5)\n\tGROWTH (1)\n\tMASTER (26)\n\tHELPER (19)\n\tHELPER (14)\n\tGROWTH (4)\n\tPARCHMENT (38)\n\tMASTER (23)\n\tPARCHMENT (39)\n\tHELPER (15)\n\tPARCHMENT (34)\n\tMASTER (22)\n\tMASTER (25)\n\tGROWTH (7)\n\tTOOL (43)\n\tPARCHMENT (40)\n\tMASTER (24)\n\tGROWTH (0)\n\tGROWTH (3)\n\tMASTER (21)\n\tGROWTH (2)\n\tTOOL (42)\n\tPARCHMENT (36)\n\tHELPER (20)\n\tHELPER (17)\n\tTOOL (41)\n\tMASTER (27)\n&quot;,&quot;sender&quot;:&quot;Gary&quot;}
+[DEBUG] Received message of type tools.aqua.bgw.net.common.response.GameActionResponse@5020b91c
+[DEBUG] Received GameActionResponse. Invoking handler for onGameActionResponse.
+[DEBUG] Received message of type tools.aqua.bgw.net.common.message.GameActionMessage@3777d1c
+[DEBUG] Received GameActionMessage. Invoking annotated receiver function.
+[INFO] Sending GameActionMessage edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] Sending GameAction as JSON: {&quot;removedTilesAxialCoordinates&quot;:[],&quot;playedTiles&quot;:[],&quot;claimedGoals&quot;:[],&quot;renouncedGoals&quot;:[]}
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.response.GameActionResponse&quot;,&quot;status&quot;:&quot;SUCCESS&quot;,&quot;errorMessages&quot;:[]}
+[INFO] Received message: {&quot;@class&quot;:&quot;tools.aqua.bgw.net.common.message.GameActionMessage&quot;,&quot;payload&quot;:&quot;{\&quot;removedTilesAxialCoordinates\&quot;:[],\&quot;playedTiles\&quot;:[],\&quot;claimedGoals\&quot;:[],\&quot;renouncedGoals\&quot;:[]}&quot;,&quot;prettyPrint&quot;:&quot;Played Cultivate:\n\tremoved tiles: \n\tplayed tiles: \n\tclaimed goals: \n\trenounced goals: &quot;,&quot;sender&quot;:&quot;Gary&quot;}
+[DEBUG] Received message of type tools.aqua.bgw.net.common.response.GameActionResponse@1d42229a
+[DEBUG] Received message of type tools.aqua.bgw.net.common.message.GameActionMessage@4675f316
+[DEBUG] Received GameActionResponse. Invoking handler for onGameActionResponse.
+[DEBUG] Received GameActionMessage. Invoking annotated receiver function.
+[INFO] Initializing BoardGameClient on host sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[DEBUG] Initializing annotated receiver functions.
+[INFO] Connecting to ws://sopra.cs.tu-dortmund.de:80/bgw-net/connect.
+[INFO] Connection is now open.
+[DEBUG] Connection call succeeded without interruption and returned true.
+[INFO] Requesting creation of new game with ID &quot;Bonsai&quot;, sessionID &quot;1234&quot; and greeting message &quot;Welcome!^_^&quot;.
+</pre>
+</span>
+</div>
+<div id="tab2" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentFieldVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentMethodVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentFieldVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentMethodVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentFieldVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentMethodVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:51] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+[2025.03.20 23:57:53] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentFieldVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:53] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentMethodVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:53] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.12</a> at 20 Mar 2025, 23:57:59</p>
+</div>
+</div>
+</body>
+</html>

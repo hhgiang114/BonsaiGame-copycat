@@ -1,0 +1,640 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > NetworkService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: NetworkService (service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">NetworkService</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,9%
+  </span>
+  <span class="absValue">
+    (16/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    56,5%
+  </span>
+  <span class="absValue">
+    (70/124)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,8%
+  </span>
+  <span class="absValue">
+    (175/204)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (1165/1398)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NetworkService$Companion</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+    <td class="coverageStat"/>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    89,5%
+  </span>
+  <span class="absValue">
+    (17/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    56,5%
+  </span>
+  <span class="absValue">
+    (70/124)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,9%
+  </span>
+  <span class="absValue">
+    (176/205)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,4%
+  </span>
+  <span class="absValue">
+    (1167/1400)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;import edu.udo.cs.sopra.ntf.*
+&nbsp;import entity.GoalTileType
+&nbsp;import gui.Refreshable
+&nbsp;import entity.*
+&nbsp;import util.ZenCardLoader
+&nbsp;
+&nbsp;/**
+&nbsp; * Service layer class that realizes the necessary logic for sending and receiving messages
+&nbsp; * in multiplayer network games. Bridges between the [BonsaiNetworkClient] and the other services.
+&nbsp; */
+<b class="fc">&nbsp;class NetworkService(private val rootService: RootService) : AbstractRefreshingService() {</b>
+&nbsp;
+&nbsp;    /** Network client. Nullable for offline games. */
+<b class="nc">&nbsp;    var client: BonsaiNetworkClient? = null</b>
+&nbsp;
+&nbsp;    /** current state of the connection in a network game. */
+<b class="fc">&nbsp;    var connectionState: ConnectionState = ConnectionState.DISCONNECTED</b>
+&nbsp;        private set
+&nbsp;
+&nbsp;    // our own name
+<b class="fc">&nbsp;    var myName : String = &quot;&quot;</b>
+&nbsp;
+<b class="fc">&nbsp;    var toBeSentMeditateMessage = MutableMeditateMessage(</b>
+<b class="fc">&nbsp;        mutableListOf(), 4, mutableListOf(),</b>
+<b class="fc">&nbsp;        mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf()</b>
+&nbsp;    )
+<b class="fc">&nbsp;    var toBeSentCultivateMessage = MutableCultivateMessage(</b>
+<b class="fc">&nbsp;        mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf()</b>
+&nbsp;    )
+&nbsp;
+<b class="fc">&nbsp;    var hasCultivated = false</b>
+<b class="fc">&nbsp;    var hasMeditated = false</b>
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Connects to server and creates a new game session.
+&nbsp;     *
+&nbsp;     * @param secret Server secret.
+&nbsp;     * @param name Player name.
+&nbsp;     * @param sessionID identifier of the hosted session (to be used by guest on join)
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if already connected to another game or connection attempt fails
+&nbsp;     */
+&nbsp;    fun createGame(secret: String, name: String, sessionID: String?) {
+<b class="pc">&nbsp;        if (!connect(secret, name)) {</b>
+<b class="nc">&nbsp;            error(&quot;Connection failed&quot;)</b>
+&nbsp;        }
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.CONNECTED)</b>
+&nbsp;
+<b class="pc">&nbsp;        if (sessionID.isNullOrBlank()) {</b>
+<b class="nc">&nbsp;            client?.createGame(GAME_ID, &quot;Welcome!^_^&quot;)</b>
+&nbsp;        } else {
+<b class="pc">&nbsp;            client?.createGame(GAME_ID, sessionID, &quot;Welcome!^_^&quot;)</b>
+&nbsp;        }
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterPlayerJoined(name) }</b>
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.WAITING_FOR_HOST_CONFIRMATION)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Connects to server and joins a game session as guest player.
+&nbsp;     *
+&nbsp;     * @param secret Server secret.
+&nbsp;     * @param name Player name.
+&nbsp;     * @param sessionID identifier of the joined session (as defined by host on create)
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if already connected to another game or connection attempt fails
+&nbsp;     */
+&nbsp;    fun joinGame(secret: String, name: String, sessionID: String) {
+<b class="pc">&nbsp;        if (!connect(secret, name)) {</b>
+<b class="nc">&nbsp;            error(&quot;Connection failed&quot;)</b>
+&nbsp;        }
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.CONNECTED)</b>
+&nbsp;
+<b class="pc">&nbsp;        client?.joinGame(sessionID, &quot;Welcome!^o^&quot;)</b>
+&nbsp;
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.WAITING_FOR_JOIN_CONFIRMATION)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * set up the game using [GameService.startNewGame] and send the game init message
+&nbsp;     * to the guest players. [connectionState] needs to be [ConnectionState.WAITING_FOR_GUEST].
+&nbsp;     * This method should be called when the host(we) decide to start the game and
+&nbsp;     * when there are 2 to 4 players in the lobby
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if [connectionState] != [ConnectionState.WAITING_FOR_GUEST]
+&nbsp;     * @throws IllegalStateException if player size &lt; 2 or player size &gt; 4
+&nbsp;     */
+&nbsp;    fun sendStartGameMessage(playerOrder: MutableList&lt;Player&gt;, goalTilesEntries: MutableList&lt;GoalTileType&gt;) {
+<b class="pc">&nbsp;        check(connectionState == ConnectionState.WAITING_FOR_GUEST)</b>
+<b class="nc">&nbsp;        { &quot;currently not prepared to start a new hosted game.&quot; }</b>
+&nbsp;
+<b class="pc">&nbsp;        val playerNames = client?.otherPlayerNames</b>
+<b class="pc">&nbsp;        checkNotNull(playerNames)</b>
+&nbsp;
+<b class="pc">&nbsp;        check(playerOrder.size in 2..4) {&quot;there should be 2 to 4 players&quot;}</b>
+&nbsp;
+<b class="fc">&nbsp;        rootService.gameService.startNewGame(playerOrder, true, goalTilesEntries)</b>
+<b class="pc">&nbsp;        val game = rootService.currentGame?.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;game should not be null right after starting it.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val nameColorPair = playerOrder.map {</b>
+<b class="fc">&nbsp;            Pair(it.name, it.color.toColorMessage())</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        val chosenGoalTiles = goalTilesEntries.map {</b>
+<b class="fc">&nbsp;            it.toGoalTileTypeMessage()</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        val zenDeckList = game.zenDeck.map {</b>
+<b class="fc">&nbsp;            Pair(it.cardType.toCardTypeMessage(), it.id)</b>
+&nbsp;        }
+<b class="fc">&nbsp;        val faceUpCardsList = game.faceUpCards.map {</b>
+<b class="fc">&nbsp;            Pair(it.cardType.toCardTypeMessage(), it.id)</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        val zenDeckMessage = zenDeckList + faceUpCardsList</b>
+&nbsp;
+<b class="fc">&nbsp;        val message = StartGameMessage(nameColorPair, chosenGoalTiles, zenDeckMessage)</b>
+&nbsp;
+<b class="pc">&nbsp;        myName = client?.playerName.toString()</b>
+&nbsp;
+<b class="pc">&nbsp;        if (myName == playerOrder.first().name) {</b>
+<b class="fc">&nbsp;            updateConnectionState(ConnectionState.PLAYING_MY_TURN)</b>
+<b class="pc">&nbsp;            client?.sendGameActionMessage(message)</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            updateConnectionState(ConnectionState.WAITING_FOR_OPPONENT)</b>
+<b class="nc">&nbsp;            client?.sendGameActionMessage(message)</b>
+&nbsp;        }
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterGameStart() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Holds the message to be sent for a Meditate action.
+&nbsp;     */
+&nbsp;    fun sendMeditateMessage() {
+&nbsp;        // --------------- prologue: state check ---------------
+<b class="pc">&nbsp;        check(connectionState == ConnectionState.PLAYING_MY_TURN)</b>
+<b class="nc">&nbsp;        { &quot;currently not expecting your turn.&quot; }</b>
+&nbsp;
+&nbsp;        // --------------- main functionality ---------------
+<b class="fc">&nbsp;        val message = MeditateMessage(</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .removedTilesAxialCoordinates.map { it },</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .chosenCardPosition,</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .playedTiles.map { (it.first.toTileTypeMessage() to it.second) },</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .drawnTiles.map { it.toTileTypeMessage() },</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .claimedGoals.map { (it.first.toGoalTileTypeMessage() to it.second + 1) },</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .renouncedGoals.map { (it.first.toGoalTileTypeMessage() to it.second + 1) },</b>
+<b class="fc">&nbsp;                toBeSentMeditateMessage</b>
+<b class="fc">&nbsp;                    .discardedTiles.map { it.toTileTypeMessage() },</b>
+&nbsp;            )
+&nbsp;
+&nbsp;        // --------------- epilogue: state update ---------------
+<b class="fc">&nbsp;        toBeSentMeditateMessage.removedTilesAxialCoordinates.clear()</b>
+<b class="fc">&nbsp;        toBeSentCultivateMessage.removedTilesAxialCoordinates.clear()</b>
+<b class="fc">&nbsp;        toBeSentMeditateMessage.playedTiles.clear()</b>
+<b class="fc">&nbsp;        toBeSentMeditateMessage.claimedGoals.clear()</b>
+<b class="fc">&nbsp;        toBeSentMeditateMessage.renouncedGoals.clear()</b>
+<b class="fc">&nbsp;        toBeSentMeditateMessage.drawnTiles.clear()</b>
+<b class="fc">&nbsp;        toBeSentMeditateMessage.discardedTiles.clear()</b>
+<b class="fc">&nbsp;        toBeSentMeditateMessage.chosenCardPosition = 4</b>
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.WAITING_FOR_OPPONENT)</b>
+<b class="fc">&nbsp;        client?.sendGameActionMessage(message)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Holds the message to be sent for a Cultivate action.
+&nbsp;     */
+&nbsp;    fun sendCultivateMessage() {
+<b class="pc">&nbsp;        check(connectionState == ConnectionState.PLAYING_MY_TURN)</b>
+<b class="nc">&nbsp;        { &quot;currently not expecting your turn.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val message = CultivateMessage(</b>
+<b class="fc">&nbsp;            toBeSentCultivateMessage.removedTilesAxialCoordinates.map { it },</b>
+<b class="fc">&nbsp;            toBeSentCultivateMessage.playedTiles.map {</b>
+<b class="fc">&nbsp;                (it.first.toTileTypeMessage() to it.second)</b>
+&nbsp;            },
+<b class="fc">&nbsp;            toBeSentCultivateMessage.claimedGoals.map {</b>
+<b class="nc">&nbsp;                (it.first.toGoalTileTypeMessage() to it.second + 1)</b>
+&nbsp;            },
+<b class="fc">&nbsp;            toBeSentCultivateMessage.renouncedGoals.map {</b>
+<b class="nc">&nbsp;                (it.first.toGoalTileTypeMessage() to it.second + 1)</b>
+&nbsp;            }
+&nbsp;        )
+&nbsp;
+&nbsp;        // at the end clear the toBeSentMessage
+<b class="fc">&nbsp;        toBeSentMeditateMessage.removedTilesAxialCoordinates.clear()</b>
+<b class="fc">&nbsp;        toBeSentCultivateMessage.removedTilesAxialCoordinates.clear()</b>
+<b class="fc">&nbsp;        toBeSentCultivateMessage.playedTiles.clear()</b>
+<b class="fc">&nbsp;        toBeSentCultivateMessage.claimedGoals.clear()</b>
+<b class="fc">&nbsp;        toBeSentCultivateMessage.renouncedGoals.clear()</b>
+&nbsp;
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.WAITING_FOR_OPPONENT)</b>
+<b class="fc">&nbsp;        client?.sendGameActionMessage(message)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initializes the entity structure with the data given by the [StartGameMessage] sent by the host.
+&nbsp;     * [connectionState] needs to be [ConnectionState.WAITING_FOR_INIT].
+&nbsp;     * This method should be called from the [BonsaiNetworkClient] when the host sends the init message.
+&nbsp;     * See [BonsaiNetworkClient.onStartGameMessageReceived].
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if not currently waiting for an init message
+&nbsp;     */
+&nbsp;    fun receiveStartGameMessage(message: StartGameMessage) {
+<b class="pc">&nbsp;        check(connectionState == ConnectionState.WAITING_FOR_INIT)</b>
+<b class="nc">&nbsp;        { &quot;not waiting for game init message&quot; }</b>
+&nbsp;
+&nbsp;        //decode message
+<b class="fc">&nbsp;        val orderedPair = message.orderedPlayerNames</b>
+<b class="fc">&nbsp;        val goalTileTypes = message.chosenGoalTiles.map {</b>
+<b class="fc">&nbsp;            it.toGoalTileType()</b>
+&nbsp;        }
+<b class="fc">&nbsp;        val players = mutableListOf&lt;Player&gt;()</b>
+<b class="fc">&nbsp;        myName = client?.playerName.toString()</b>
+&nbsp;
+<b class="fc">&nbsp;        orderedPair.forEach {</b>
+<b class="fc">&nbsp;            val isLocal = (myName == it.first)</b>
+&nbsp;            // TODO(we need to decide if we use bot or not)
+<b class="fc">&nbsp;            players.add(Player(it.first, PlayerType.HUMAN, isLocal, it.second.toColor()))</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;
+&nbsp;        //initialise game
+<b class="fc">&nbsp;        rootService.gameService.startNewGame(players, true, goalTileTypes.toMutableList())</b>
+&nbsp;
+&nbsp;        //construct game
+<b class="fc">&nbsp;        val standardZenDeck = ZenCardLoader().readAllZenCards(4)</b>
+<b class="pc">&nbsp;        val game = rootService.currentGame?.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(game)</b>
+<b class="fc">&nbsp;        game.zenDeck =</b>
+<b class="fc">&nbsp;            message.orderedCards.map {</b>
+<b class="fc">&nbsp;                standardZenDeck[it.second]</b>
+<b class="fc">&nbsp;            }.toMutableList()</b>
+<b class="fc">&nbsp;        game.faceUpCards.addAll(game.zenDeck.takeLast(4))</b>
+<b class="fc">&nbsp;        repeat(4) {game.zenDeck.removeLast()}</b>
+&nbsp;
+<b class="pc">&nbsp;        if (myName == orderedPair.first().first) {</b>
+<b class="nc">&nbsp;            updateConnectionState(ConnectionState.PLAYING_MY_TURN)</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            updateConnectionState(ConnectionState.WAITING_FOR_OPPONENT)</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterGameStart() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Receives and processes the Meditate action message from another player.
+&nbsp;     *
+&nbsp;     * @param message The Meditate message received from the opponent.
+&nbsp;     * @param sender The name of the sender (opponent).
+&nbsp;     */
+&nbsp;    fun receiveMeditateMessage(message: MeditateMessage) {
+&nbsp;        // --------------- prologue: state check ---------------
+<b class="pc">&nbsp;        check(connectionState == ConnectionState.WAITING_FOR_OPPONENT)</b>
+<b class="nc">&nbsp;            { &quot;currently not expecting an opponent&#39;s turn.&quot; }</b>
+<b class="pc">&nbsp;        val game = rootService.currentGame?.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(game)</b>
+&nbsp;
+&nbsp;        // --------------- main functionality ---------------
+<b class="fc">&nbsp;        message.removedTilesAxialCoordinates</b>
+<b class="fc">&nbsp;            .forEach { rootService.treeService.removeFromTree(it) }</b>
+<b class="fc">&nbsp;        val chosenCard = game.faceUpCards[message.chosenCardPosition]</b>
+&nbsp;
+<b class="fc">&nbsp;        if (chosenCard is HelperCard) {</b>
+<b class="fc">&nbsp;            game.currentPlayer.playableTilesCopy.addAll(chosenCard.tileTypes)</b>
+&nbsp;        }
+&nbsp;
+&nbsp;            // processing `chosenCardPosition` in message
+<b class="fc">&nbsp;        when (message.chosenCardPosition) {</b>
+<b class="pc">&nbsp;            1 -&gt; rootService.playerActionService</b>
+<b class="nc">&nbsp;                .meditate (</b>
+<b class="nc">&nbsp;                        cardPosition = 1,</b>
+<b class="nc">&nbsp;                        chosenTile = message.drawnTiles[0].toTileType(),</b>
+&nbsp;                    )
+<b class="fc">&nbsp;            else -&gt; rootService.playerActionService</b>
+<b class="fc">&nbsp;                .meditate (</b>
+<b class="fc">&nbsp;                    cardPosition = message.chosenCardPosition,</b>
+<b class="fc">&nbsp;                    chosenTile = null,</b>
+&nbsp;                )
+&nbsp;        }
+&nbsp;
+<b class="pc">&nbsp;        if (chosenCard is HelperCard &amp;&amp; message.playedTiles.isNotEmpty()){</b>
+<b class="fc">&nbsp;            message.playedTiles</b>
+<b class="fc">&nbsp;                .forEach {</b>
+<b class="fc">&nbsp;                    val tile = Tile(null, null, it.first.toTileType())</b>
+<b class="fc">&nbsp;                    rootService.treeService.playTile(tile, it.second)</b>
+<b class="fc">&nbsp;                }</b>
+<b class="fc">&nbsp;            message.claimedGoals</b>
+<b class="fc">&nbsp;                .forEach { rootService.playerActionService</b>
+<b class="nc">&nbsp;                    .claimOrRenounceGoal(true, it.first.toGoalTileType(), it.second) }</b>
+<b class="fc">&nbsp;            message.renouncedGoals</b>
+<b class="fc">&nbsp;                .forEach { rootService.playerActionService</b>
+<b class="nc">&nbsp;                    .claimOrRenounceGoal(false, it.first.toGoalTileType(), it.second) }</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /*
+&nbsp;        while (removedTiles.isNotEmpty()) {
+&nbsp;            val removedTile = removedTiles.removeFirst()
+&nbsp;            var removed = false
+&nbsp;            while(!removed) {
+&nbsp;                val i = personalSupplies.size
+&nbsp;                specialDiscard(i, personalSupplies, removedTile)
+&nbsp;                removed = true
+&nbsp;            }
+&nbsp;        }
+&nbsp;        */
+&nbsp;
+&nbsp;        // --------------- epilogue: state update ---------------
+<b class="fc">&nbsp;        val currentIndex = game.players.indexOf(game.currentPlayer)</b>
+<b class="fc">&nbsp;        val nextIndex = (currentIndex + 1) % game.players.size</b>
+<b class="pc">&nbsp;        if (game.players[nextIndex].name == myName) updateConnectionState(ConnectionState.PLAYING_MY_TURN)</b>
+<b class="fc">&nbsp;        hasMeditated = false</b>
+<b class="fc">&nbsp;        game.currentPlayer.hasPlayed = true</b>
+<b class="fc">&nbsp;        rootService.playerActionService.endTurn()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // This is not used so...
+&nbsp;//    private fun specialDiscard(i: Int, personalSupplies: MutableList&lt;Tile&gt;, removedTile: TileType){
+&nbsp;//        var j = i
+&nbsp;//        while(j &gt;= 0) {
+&nbsp;//            val supply = personalSupplies.removeLast()
+&nbsp;//            if (supply.tileType == removedTile) {
+&nbsp;//                rootService.playerActionService.discardSupplyTile(supply)
+&nbsp;//                j = -1
+&nbsp;//            }
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Receives and processes the Cultivate action message from another player.
+&nbsp;     *
+&nbsp;     * @param message The Cultivate message received from the opponent.
+&nbsp;     * @param sender The name of the sender (opponent).
+&nbsp;     */
+&nbsp;    fun receiveCultivateMessage(message: CultivateMessage) {
+<b class="pc">&nbsp;        check(connectionState == ConnectionState.WAITING_FOR_OPPONENT)</b>
+<b class="nc">&nbsp;        { &quot;currently not expecting an opponent&#39;s turn.&quot; }</b>
+&nbsp;
+&nbsp;        // reproduce what the other player has done
+<b class="pc">&nbsp;        val game = rootService.currentGame?.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(game)</b>
+&nbsp;        //val otherPlayer = game.currentPlayer
+<b class="fc">&nbsp;        message.removedTilesAxialCoordinates.forEach {</b>
+<b class="nc">&nbsp;            rootService.treeService.removeFromTree(it)</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        rootService.playerActionService.cultivate()</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        if (message.playedTiles.isNotEmpty()){</b>
+<b class="fc">&nbsp;            message.playedTiles.forEach {</b>
+<b class="fc">&nbsp;                val tile = Tile(null, null, it.first.toTileType())</b>
+<b class="fc">&nbsp;                rootService.treeService.playTile(tile, it.second)</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        message.claimedGoals.forEach {</b>
+<b class="nc">&nbsp;            rootService.playerActionService.claimOrRenounceGoal(true, it.first.toGoalTileType(), it.second)</b>
+<b class="nc">&nbsp;        }</b>
+<b class="fc">&nbsp;        message.renouncedGoals.forEach {</b>
+<b class="nc">&nbsp;            rootService.playerActionService.claimOrRenounceGoal(false, it.first.toGoalTileType(), it.second)</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        val currentIndex = game.players.indexOf(game.currentPlayer)</b>
+&nbsp;        // get next player in the list, looping back to the first player at end of the list
+<b class="fc">&nbsp;        val nextIndex = (currentIndex + 1) % game.players.size</b>
+&nbsp;
+<b class="fc">&nbsp;        if (game.players[nextIndex].name == myName) {</b>
+<b class="fc">&nbsp;            updateConnectionState(ConnectionState.PLAYING_MY_TURN)</b>
+&nbsp;        }
+<b class="fc">&nbsp;        hasCultivated = false</b>
+<b class="fc">&nbsp;        rootService.playerActionService.endTurn()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the [connectionState] to [newState] and notifies
+&nbsp;     * all refreshables via [Refreshable.refreshConnectionState]
+&nbsp;     */
+&nbsp;    fun updateConnectionState(newState: ConnectionState) {
+<b class="fc">&nbsp;        this.connectionState = newState</b>
+<b class="fc">&nbsp;        onAllRefreshables {</b>
+<b class="nc">&nbsp;            refreshConnectionState(newState)</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    /**
+&nbsp;     * Notifies all refreshables when a player joins.
+&nbsp;     * @param playerName The name of the player who joined.
+&nbsp;     */
+&nbsp;    fun receivePlayerJoinedMessage(playerName: String) {
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterPlayerJoined(playerName) }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attempts to connect to the server with the given secret and player name.
+&nbsp;     *
+&nbsp;     * @param secret The server secret for authentication.
+&nbsp;     * @param name The player&#39;s name.
+&nbsp;     *
+&nbsp;     * @return True if the connection was successful, false otherwise.
+&nbsp;     */
+&nbsp;    private fun connect(secret: String, name: String): Boolean {
+<b class="pc">&nbsp;        require(connectionState == ConnectionState.DISCONNECTED &amp;&amp; client == null)</b>
+<b class="nc">&nbsp;        { &quot;already connected to another game&quot; }</b>
+&nbsp;
+<b class="pc">&nbsp;        require(secret.isNotBlank()) { &quot;server secret must be given&quot; }</b>
+<b class="pc">&nbsp;        require(name.isNotBlank()) { &quot;player name must be given&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val newClient =</b>
+<b class="fc">&nbsp;            BonsaiNetworkClient(</b>
+<b class="fc">&nbsp;                playerName = name,</b>
+<b class="fc">&nbsp;                host = SERVER_ADDRESS,</b>
+<b class="fc">&nbsp;                secret = secret,</b>
+<b class="fc">&nbsp;                networkService = this</b>
+&nbsp;            )
+&nbsp;
+<b class="pc">&nbsp;        return if (newClient.connect()) {</b>
+<b class="fc">&nbsp;            this.client = newClient</b>
+<b class="fc">&nbsp;            true</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            false</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Disconnects the [client] from the server, nulls it and updates the
+&nbsp;     * [connectionState] to [ConnectionState.DISCONNECTED]. Can safely be called
+&nbsp;     * even if no connection is currently active.
+&nbsp;     */
+&nbsp;    fun disconnect() {
+<b class="fc">&nbsp;        client?.apply {</b>
+<b class="pc">&nbsp;            if (sessionID != null) leaveGame(&quot;Goodbye!&quot;)</b>
+<b class="pc">&nbsp;            if (isOpen) disconnect()</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        client = null</b>
+<b class="fc">&nbsp;        updateConnectionState(ConnectionState.DISCONNECTED)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * used for network tests
+&nbsp;     */
+&nbsp;    fun setConnectionStateTest(newState: ConnectionState){
+<b class="fc">&nbsp;        updateConnectionState(newState)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** URL of the BGW net server hosted for SoPra participants
+&nbsp;     * Name of the game as registered with the server
+&nbsp;     * */
+<b class="fc">&nbsp;    companion object {</b>
+&nbsp;
+&nbsp;        const val SERVER_ADDRESS = &quot;sopra.cs.tu-dortmund.de:80/bgw-net/connect&quot;
+&nbsp;
+&nbsp;        const val GAME_ID = &quot;Bonsai&quot;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

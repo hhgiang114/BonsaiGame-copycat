@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.PlayTileTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:30" hostname="Giang-Hoangs.local" time="0.35">
+  <properties/>
+  <testcase name="test place tile()" classname="service.PlayTileTest" time="0.342"/>
+  <testcase name="testNeighbourTilesForFruit()" classname="service.PlayTileTest" time="0.0"/>
+  <testcase name="test canPlayTile returns true for valid play()" classname="service.PlayTileTest" time="0.001"/>
+  <testcase name="test PlayTile tile type Any()" classname="service.PlayTileTest" time="0.0"/>
+  <testcase name="testPlayTileMessagesIfConnected()" classname="service.PlayTileTest" time="0.001"/>
+  <testcase name="test place tile fail()" classname="service.PlayTileTest" time="0.002"/>
+  <testcase name="testPlayTileMessagesIfDisConnected()" classname="service.PlayTileTest" time="0.001"/>
+  <testcase name="testCanPlayIfNoTilesInHand()" classname="service.PlayTileTest" time="0.0"/>
+  <testcase name="test when tile not in hand()" classname="service.PlayTileTest" time="0.001"/>
+  <testcase name="test when position is occupied()" classname="service.PlayTileTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

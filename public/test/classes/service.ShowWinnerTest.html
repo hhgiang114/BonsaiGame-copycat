@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ShowWinnerTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ShowWinnerTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/service.html">service</a> &gt; ShowWinnerTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">6</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.175s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+<li>
+<a href="#tab2">Standard error</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testEmptyGameState()</td>
+<td class="success">0.006s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testGameOver()</td>
+<td class="success">0.058s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testSingleWinner()</td>
+<td class="success">0.019s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testTieWithAllPlayers()</td>
+<td class="success">0.032s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testTieWithThreePlayers()</td>
+<td class="success">0.051s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testTieWithTwoPlayers()</td>
+<td class="success">0.009s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>[DEBUG] Received message of type tools.aqua.bgw.net.common.response.CreateGameResponse@3f5ab755
+[DEBUG] Received CreateGameResponse. Invoking handler for onCreateGameResponse.
+[INFO] Disconnecting.
+[INFO] Connection is now closed.
+[DEBUG] Status code is: 1000. The connection was closed with the following reason: . The closing was initiated by the local host.
+[DEBUG] Disconnection call succeeded without interruption.
+[DEBUG] Found the following GameActionClasses:
+[DEBUG] edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.MeditateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction
+[DEBUG] Found the following GameActionReceivers:
+[DEBUG] onStartGameMessageReceived
+[DEBUG] onCultivateMessage
+[DEBUG] onMeditateMessage
+Test: [Player(name=Tom4, playerType=HUMAN, isLocal=true, color=PURPLE), Player(name=Tom3, playerType=HUMAN, isLocal=true, color=BLUE), Player(name=Tom2, playerType=HUMAN, isLocal=true, color=RED), Player(name=Tom, playerType=HUMAN, isLocal=true, color=BLACK)]
+</pre>
+</span>
+</div>
+<div id="tab2" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>Exception in thread &quot;DefaultDispatcher-worker-2 @coroutine#58&quot; java.lang.IllegalStateException: SESSION_WITH_ID_ALREADY_EXISTS
+	at service.BonsaiNetworkClient.disconnectAndError(BonsaiNetworkClient.kt:148)
+	at service.BonsaiNetworkClient.onCreateGameResponse(BonsaiNetworkClient.kt:48)
+	at tools.aqua.bgw.net.client.BGWWebSocketClient.messageMapping(BGWWebSocketClient.kt:170)
+	at tools.aqua.bgw.net.client.BGWWebSocketClient.access$messageMapping(BGWWebSocketClient.kt:47)
+	at tools.aqua.bgw.net.client.BGWWebSocketClient$onMessage$1.invokeSuspend(BGWWebSocketClient.kt:147)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:106)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:584)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:793)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:697)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:684)
+	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [CoroutineId(58), &quot;coroutine#58&quot;:StandaloneCoroutine{Cancelling}@2270422b, Dispatchers.Default]
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.12</a> at 20 Mar 2025, 23:57:59</p>
+</div>
+</div>
+</body>
+</html>

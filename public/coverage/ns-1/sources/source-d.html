@@ -1,0 +1,606 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TreeService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: TreeService (service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">TreeService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,8%
+  </span>
+  <span class="absValue">
+    (146/190)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,5%
+  </span>
+  <span class="absValue">
+    (159/170)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,8%
+  </span>
+  <span class="absValue">
+    (1364/1486)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TreeService$WhenMappings</td>
+    <td class="coverageStat"/>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,8%
+  </span>
+  <span class="absValue">
+    (146/190)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,5%
+  </span>
+  <span class="absValue">
+    (159/170)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,8%
+  </span>
+  <span class="absValue">
+    (1364/1486)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;import entity.*
+&nbsp;import util.POT
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * The service layer class which contains all actions related to the bonsai tree
+&nbsp; */
+<b class="fc">&nbsp;class TreeService(private val rootService: RootService) : AbstractRefreshingService() {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Place a bonsai tile to players bonsai tree.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - Player has chosen action cultivate, or has a helper card.
+&nbsp;     * - Player can place a wood tile to his bonsai tree.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - bonsai tile is added to bonsai tree.
+&nbsp;     *
+&nbsp;     * @param tile The bonsai tile to be placed.
+&nbsp;     * @param tilePosition The position of the bonsai tile to be placed.
+&nbsp;     * @throws IllegalArgumentException if the bonsai tile is not playable.
+&nbsp;     * @throws IllegalArgumentException if the tile position is invalid.
+&nbsp;     */
+&nbsp;    fun playTile(tile: Tile, tilePosition: Pair&lt;Int, Int&gt;) {
+&nbsp;
+<b class="fc">&nbsp;        require(canPlayTile(tile, tilePosition)) { &quot;Tile can not be played&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val currentPlayer = getCurrentPlayer()</b>
+<b class="fc">&nbsp;        currentPlayer.bonsaiTree[tilePosition] = tile</b>
+<b class="fc">&nbsp;        currentPlayer.personalSupply.remove(tile)</b>
+&nbsp;
+<b class="fc">&nbsp;        if (tile.tileType in currentPlayer.playableTilesCopy) {</b>
+<b class="fc">&nbsp;            currentPlayer.playableTilesCopy.remove(tile.tileType)</b>
+<b class="pc">&nbsp;        } else if (TileType.ANY in currentPlayer.playableTilesCopy) {</b>
+<b class="fc">&nbsp;            currentPlayer.playableTilesCopy.remove(TileType.ANY)</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // update message
+<b class="fc">&nbsp;        val net = rootService.networkService</b>
+<b class="fc">&nbsp;        if (net.connectionState != ConnectionState.DISCONNECTED &amp;&amp;</b>
+<b class="pc">&nbsp;            currentPlayer.isLocal</b>
+&nbsp;        )
+<b class="pc">&nbsp;            if (net.hasCultivated) {</b>
+<b class="nc">&nbsp;                net.toBeSentCultivateMessage.playedTiles.add(</b>
+<b class="nc">&nbsp;                    (tile.tileType to (tilePosition))</b>
+&nbsp;                )
+<b class="pc">&nbsp;            } else if (net.hasMeditated) {</b>
+<b class="fc">&nbsp;                net.toBeSentMeditateMessage.playedTiles.add(</b>
+<b class="fc">&nbsp;                    (tile.tileType to (tilePosition))</b>
+&nbsp;                )
+&nbsp;            }
+&nbsp;
+<b class="pc">&nbsp;        val game = rootService.currentGame?.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(game)</b>
+<b class="fc">&nbsp;        val goalTiles: MutableList&lt;Pair&lt;GoalTileType, Int&gt;&gt; = mutableListOf()</b>
+<b class="fc">&nbsp;        var reached = false</b>
+<b class="fc">&nbsp;        game.goalTiles.forEach {</b>
+<b class="nc">&nbsp;            if (rootService.playerActionService.canClaimOrRenounceGoal(it.goalTileType, it.tier) &amp;&amp;</b>
+<b class="nc">&nbsp;                    !currentPlayer.renouncedGoals.contains(it)) {</b>
+<b class="nc">&nbsp;                goalTiles += (it.goalTileType to it.tier)</b>
+<b class="nc">&nbsp;                reached = true</b>
+<b class="nc">&nbsp;                onAllRefreshables { refreshAfterPlayTile(it.goalTileType, it.tier, tilePosition) }</b>
+&nbsp;                }
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        /*
+&nbsp;        goalTiles.forEach {
+&nbsp;            if (//currentPlayer.isLocal &amp;&amp;
+&nbsp;                currentPlayer.playerType == PlayerType.HUMAN
+&nbsp;            ) {
+&nbsp;                // call claimOrRenounceGoal() in the gui layer
+&nbsp;
+&nbsp;            }
+&nbsp;        }
+&nbsp;        */
+&nbsp;
+<b class="pc">&nbsp;        if (!reached) {</b>
+&nbsp;            // do other stuff in gui
+<b class="fc">&nbsp;            onAllRefreshables { refreshAfterPlayTile(null, 0, tilePosition) }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a tile from the current player&#39;s bonsai tree and updates the game state accordingly.
+&nbsp;     *
+&nbsp;     * This function ensures that the game is in a valid state before removing the tile. It verifies that:
+&nbsp;     * - A game is currently active.
+&nbsp;     * - The game state is properly initialized.
+&nbsp;     * - The tile to be removed is a **LEAF** tile.
+&nbsp;     * - The removal is **minimal and correct** according to game rules.
+&nbsp;     * - If the removed tile is adjacent to any **FRUIT** tiles, those adjacent **FRUIT** tiles are also removed.
+&nbsp;     *
+&nbsp;     * After removing the tile(s), the function refreshes the game UI and, if applicable, updates the network message
+&nbsp;     * for multiplayer synchronization.
+&nbsp;     *
+&nbsp;     * @param tilePosition The axial coordinates of the tile to be removed.
+&nbsp;     * @throws IllegalStateException if no game is active.
+&nbsp;     * @throws IllegalArgumentException if the move is not valid.
+&nbsp;     */
+&nbsp;    fun removeFromTree(tilePosition: Pair&lt;Int, Int&gt;) {
+&nbsp;
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        val currentPlayer = getCurrentPlayer()</b>
+&nbsp;
+<b class="pc">&nbsp;        require(!canPlayWood())</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        require(gameState.currentPlayer.bonsaiTree[tilePosition]?.tileType == TileType.LEAF</b>
+<b class="pc">&nbsp;                    || gameState.currentPlayer.bonsaiTree[tilePosition]?.tileType == TileType.FLOWER)</b>
+<b class="fc">&nbsp;            { &quot;not a valid move&quot; }</b>
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="pc">&nbsp;                if((gameState.currentPlayer.bonsaiTree[tilePosition]?.tileType == TileType.LEAF)</b>
+<b class="pc">&nbsp;                    &amp;&amp; isMinimalAndCorrect(tilePosition)){</b>
+<b class="fc">&nbsp;                    if (getNeighbourTiles(tilePosition).any { it.second?.tileType == TileType.FRUIT }) {</b>
+<b class="fc">&nbsp;                        getNeighbourTiles(tilePosition)</b>
+<b class="fc">&nbsp;                            .filter { it.second?.tileType == TileType.FRUIT }</b>
+<b class="fc">&nbsp;                            .forEach { currentPlayer.bonsaiTree.remove(it.first) }</b>
+<b class="fc">&nbsp;                        currentPlayer.bonsaiTree.remove(tilePosition)</b>
+&nbsp;                        // TODO : check it another time !!!!!!
+&nbsp;                    } else {
+<b class="fc">&nbsp;                        currentPlayer.bonsaiTree.remove(tilePosition)</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                else{
+<b class="nc">&nbsp;                    currentPlayer.bonsaiTree.remove(tilePosition)</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                gameState.currentState = States.CHOOSE_ACTION</b>
+&nbsp;                //currentPlayer.hasPlayed = true
+&nbsp;                // Refresh GUI to reflect the updated tree
+<b class="fc">&nbsp;                onAllRefreshables { refreshAfterRemoveFromTree(tilePosition) }</b>
+&nbsp;
+&nbsp;                // update message
+<b class="fc">&nbsp;                val net = rootService.networkService</b>
+&nbsp;                // TODO(if it&#39;s allowed then...)
+<b class="fc">&nbsp;                if (net.connectionState != ConnectionState.DISCONNECTED &amp;&amp;</b>
+<b class="pc">&nbsp;                    currentPlayer.isLocal</b>
+&nbsp;                ) {
+<b class="fc">&nbsp;                    net.toBeSentCultivateMessage.removedTilesAxialCoordinates.add(tilePosition)</b>
+<b class="fc">&nbsp;                    net.toBeSentMeditateMessage.removedTilesAxialCoordinates.add(tilePosition)</b>
+&nbsp;                }
+&nbsp;
+&nbsp;        //require(!currentPlayer.hasPlayed) {&quot;player has already chosen other moves&quot;}
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Determines whether a given **LEAF** tile can be **minimally and correctly** removed from the bonsai tree.
+&nbsp;     *
+&nbsp;     * A **LEAF** tile is considered removable if:
+&nbsp;     * - It has at least one empty neighboring tile.
+&nbsp;     * - It does not violate game constraints regarding WOOD, LEAF, and FLOWER tiles.
+&nbsp;     * - If multiple LEAF tiles are removable, priority is given to the ones in `removableLeafs1`,
+&nbsp;     *   which are the most minimal and correct removals.
+&nbsp;     *
+&nbsp;     * The function first classifies all removable **LEAF** tiles into two groups:
+&nbsp;     * 1. **`removableLeafs1`** - The highest-priority LEAF tiles that can be removed.
+&nbsp;     * 2. **`removableLeafs2`** - Other LEAF tiles that are removable but the system should also remove connected tiles.
+&nbsp;     *
+&nbsp;     * The function returns `true` if the given `tilePosition` exists in either of these lists,
+&nbsp;     * with priority given to `removableLeafs1`.
+&nbsp;     *
+&nbsp;     * @param tilePosition The axial coordinates of the tile to check for removability.
+&nbsp;     * @return `true` if the tile is a **valid minimal removal**, otherwise `false`.
+&nbsp;     * @throws IllegalStateException if no game or game state is active.
+&nbsp;     */
+&nbsp;    fun isMinimalAndCorrect(tilePosition: Pair&lt;Int, Int&gt;): Boolean {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+<b class="fc">&nbsp;        val tree = gameState.currentPlayer.bonsaiTree</b>
+<b class="fc">&nbsp;        val flowerTilesPosition = tree</b>
+<b class="fc">&nbsp;            .filter { it.value.tileType == TileType.FLOWER }.keys.toMutableList()</b>
+<b class="fc">&nbsp;        val removableFlowers: MutableList&lt;Pair&lt;Int, Int&gt;&gt; = mutableListOf()</b>
+<b class="fc">&nbsp;        flowerTilesPosition.forEach { position -&gt;</b>
+<b class="fc">&nbsp;            val neighbourTiles = getNeighbourTiles(position)</b>
+&nbsp;
+<b class="fc">&nbsp;            val hasNullNeighbor = neighbourTiles.any { it.second == null }</b>
+<b class="fc">&nbsp;            val hasWoodNeighbor = neighbourTiles.any { it.second?.tileType == TileType.WOOD }</b>
+&nbsp;
+<b class="pc">&nbsp;            if (hasNullNeighbor &amp;&amp; hasWoodNeighbor) {</b>
+<b class="fc">&nbsp;                if (neighbourTiles.all { checkNullWoodLeaf(it) }) {</b>
+<b class="fc">&nbsp;                    removableFlowers.add(position)</b>
+&nbsp;                }
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        val leafTilesPositions = tree</b>
+<b class="fc">&nbsp;            .filter { it.value.tileType == TileType.LEAF }.keys.toMutableList()</b>
+<b class="fc">&nbsp;        val removableLeafs1: MutableList&lt;Pair&lt;Int, Int&gt;&gt; = mutableListOf()</b>
+<b class="fc">&nbsp;        val removableLeafs2: MutableList&lt;Pair&lt;Int, Int&gt;&gt; = mutableListOf()</b>
+<b class="fc">&nbsp;        leafTilesPositions.forEach { position -&gt;</b>
+<b class="fc">&nbsp;            val neighbourTiles = getNeighbourTiles(position)</b>
+<b class="fc">&nbsp;            if (neighbourTiles.any { it.second == null }) {</b>
+<b class="fc">&nbsp;                if (neighbourTiles.all {</b>
+<b class="pc">&nbsp;                        checkNullWoodLeaf(it) || (it.second?.tileType == TileType.FLOWER &amp;&amp;</b>
+<b class="fc">&nbsp;                                getNeighbourTiles(it.first)</b>
+<b class="fc">&nbsp;                                    .filter { neighbor -&gt; neighbor.first != position }</b>
+<b class="fc">&nbsp;                                    .any { neighbor -&gt; neighbor.second?.tileType == TileType.LEAF })</b>
+&nbsp;                    }) {
+<b class="fc">&nbsp;                    removableLeafs1.add(position)</b>
+&nbsp;                } else {
+<b class="fc">&nbsp;                    removableLeafs2.add(position)</b>
+&nbsp;                }
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+<b class="pc">&nbsp;        if (gameState.currentPlayer.bonsaiTree[tilePosition]?.tileType == TileType.FLOWER){</b>
+<b class="fc">&nbsp;            return removableFlowers.contains(tilePosition)</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            if (removableLeafs1.isNotEmpty()) return removableLeafs1.contains(tilePosition)</b>
+<b class="fc">&nbsp;                    return removableLeafs2.contains(tilePosition)</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun checkNullWoodLeaf(neighbourTile: Pair&lt;Pair&lt;Int, Int&gt;, Tile?&gt;): Boolean{
+<b class="fc">&nbsp;        return  neighbourTile.second == null ||</b>
+<b class="pc">&nbsp;                neighbourTile.second?.tileType == TileType.WOOD ||</b>
+<b class="pc">&nbsp;                neighbourTile.second?.tileType == TileType.LEAF</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the six neighboring tiles of a given position in a hexagonal grid.
+&nbsp;     *
+&nbsp;     * Each hexagonal tile has six neighbors, determined by axial coordinates `(q, r)`.
+&nbsp;     * This function returns a list of all neighboring positions along with their corresponding tiles.
+&nbsp;     * If a neighboring tile does not exist in the bonsai tree, `null` is returned for that position.
+&nbsp;     *
+&nbsp;     * @param position The axial coordinates `(q, r)` of the tile whose neighbors should be retrieved.
+&nbsp;     * @return a list of pairs where each pair consists of:
+&nbsp;     *         - The neighbor&#39;s coordinates as a `Pair&lt;Int, Int&gt;`.
+&nbsp;     *         - The corresponding `Tile?` (or `null` if there is no tile at that position).
+&nbsp;     * @throws IllegalStateException if no game or game state is active.
+&nbsp;     */
+&nbsp;    private fun getNeighbourTiles(position: Pair&lt;Int, Int&gt;): List&lt;Pair&lt;Pair&lt;Int, Int&gt;, Tile?&gt;&gt; {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+<b class="fc">&nbsp;        val tree = gameState.currentPlayer.bonsaiTree</b>
+<b class="fc">&nbsp;        val q = position.first</b>
+<b class="fc">&nbsp;        val r = position.second</b>
+<b class="fc">&nbsp;        return listOf(</b>
+<b class="fc">&nbsp;            Pair(Pair(q + 1, r), tree.getOrDefault(Pair(q + 1, r), null)),</b>
+<b class="fc">&nbsp;            Pair(Pair(q, r + 1), tree.getOrDefault(Pair(q, r + 1), null)),</b>
+<b class="fc">&nbsp;            Pair(Pair(q - 1, r + 1), tree.getOrDefault(Pair(q - 1, r + 1), null)),</b>
+<b class="fc">&nbsp;            Pair(Pair(q - 1, r), tree.getOrDefault(Pair(q - 1, r), null)),</b>
+<b class="fc">&nbsp;            Pair(Pair(q, r - 1), tree.getOrDefault(Pair(q, r - 1), null)),</b>
+<b class="fc">&nbsp;            Pair(Pair(q + 1, r - 1), tree.getOrDefault(Pair(q + 1, r - 1), null))</b>
+&nbsp;        )
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if a bonsai tile can be played based on the symbols shown on
+&nbsp;     * Seishi tile or growth cards.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - player must have bonsai tiles to place with.
+&nbsp;     * - player must have bonsai tile shown on Seishi tile or growth cards.
+&nbsp;     *
+&nbsp;     * @param tile The bonsai tile to be placed.
+&nbsp;     * @return true if bonsai tile can be placed.
+&nbsp;     * @throws IllegalArgumentException if player has no bonsai tiles to place.
+&nbsp;     */
+&nbsp;    fun canPlayTile(tile: Tile): Boolean {
+<b class="fc">&nbsp;        val currentPlayer = getCurrentPlayer()</b>
+<b class="fc">&nbsp;        require(currentPlayer.personalSupply.any{</b>
+<b class="fc">&nbsp;            it.typeEqual(tile)</b>
+&nbsp;        }
+&nbsp;        )
+<b class="fc">&nbsp;        { &quot;Player does not have this bonsai tile in hand&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        return currentPlayer.playableTilesCopy.contains(tile.tileType)</b>
+<b class="pc">&nbsp;                || currentPlayer.playableTilesCopy.contains(TileType.ANY)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if a WOOD tile can be placed in the bonsai tree.
+&nbsp;     *
+&nbsp;     * The function iterates through all existing WOOD tiles in the tree and determines
+&nbsp;     * whether any of them have an available adjacent position
+&nbsp;     * A position is considered available if:
+&nbsp;     * - It is one of the six hexagonal neighbors of a WOOD tile.
+&nbsp;     * - It is **not** part of the predefined `POT` (restricted area).
+&nbsp;     * - It is currently unoccupied
+&nbsp;     *
+&nbsp;     * If at least one WOOD tile has an open space next to it,
+&nbsp;     * the function returns `true`; otherwise, it returns `false`.
+&nbsp;     *
+&nbsp;     * @return `true` if a WOOD tile can be placed, otherwise `false`.
+&nbsp;     */
+&nbsp;    fun canPlayWood(): Boolean {
+<b class="fc">&nbsp;        val game = rootService.currentGame</b>
+<b class="pc">&nbsp;        checkNotNull(game) { &quot;No game was started.&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val gameState = game.currentBonsaiGameState</b>
+<b class="pc">&nbsp;        checkNotNull(gameState) { &quot;No active game state.&quot; }</b>
+<b class="fc">&nbsp;        val tree = getCurrentPlayer().bonsaiTree</b>
+<b class="fc">&nbsp;        tree.filter { it.value.tileType == TileType.WOOD }</b>
+<b class="fc">&nbsp;            .forEach { (position, tile) -&gt;</b>
+<b class="fc">&nbsp;                val q = position.first</b>
+<b class="fc">&nbsp;                val r = position.second</b>
+&nbsp;
+&nbsp;//                val neighbourTiles = listOf(
+&nbsp;//                    Pair(Pair(q + 1, r), tree.getOrDefault(Pair(q + 1, r), null)),
+&nbsp;//                    Pair(Pair(q, r + 1), tree.getOrDefault(Pair(q, r + 1), null)),
+&nbsp;//                    Pair(Pair(q - 1, r + 1), tree.getOrDefault(Pair(q - 1, r + 1), null)),
+&nbsp;//                    Pair(Pair(q - 1, r), tree.getOrDefault(Pair(q - 1, r), null)),
+&nbsp;//                    Pair(Pair(q, r - 1), tree.getOrDefault(Pair(q, r - 1), null)),
+&nbsp;//                    Pair(Pair(q + 1, r - 1), tree.getOrDefault(Pair(q + 1, r - 1), null))
+&nbsp;//                ).filter { it.first !in POT }
+<b class="fc">&nbsp;                val neighbourTiles = getNeighbourTiles(position).filter { it.first !in POT }</b>
+&nbsp;
+<b class="fc">&nbsp;                val nullPositions = neighbourTiles.filter { it.second == null }.map { it.first }</b>
+&nbsp;
+<b class="fc">&nbsp;                if (nullPositions.isNotEmpty()) {</b>
+<b class="fc">&nbsp;                    gameState.currentState = States.CHOOSE_ACTION</b>
+<b class="fc">&nbsp;                    return true</b>
+&nbsp;                }
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;        gameState.currentState = States.REMOVE_TILES</b>
+<b class="fc">&nbsp;        return false</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if a bonsai tile can be played based on the game rules.
+&nbsp;     *
+&nbsp;     * Rules:
+&nbsp;     * - A wood tile must be placed on another wood tile.
+&nbsp;     * - A leaf tile must be placed on a wood tile.
+&nbsp;     * - A flower tile must be placed on a leaf tile.
+&nbsp;     * - A fruit tile must be placed in between two leave tiles.
+&nbsp;     *
+&nbsp;     * @param tile The bonsai tile to be placed.
+&nbsp;     * @param tilePosition The position of the bonsai tile to be placed.
+&nbsp;     * @return true if bonsai tile can be placed.
+&nbsp;     * @throws IllegalArgumentException if player has no bonsai tiles to place.
+&nbsp;     * @throws IllegalArgumentException if bonsai tile is played in invalid position.
+&nbsp;     */
+&nbsp;    fun canPlayTile(tile: Tile, tilePosition: Pair&lt;Int, Int&gt;): Boolean {
+<b class="pc">&nbsp;        if (!canPlayTile(tile)) return false</b>
+<b class="fc">&nbsp;        val currentPlayer = getCurrentPlayer()</b>
+&nbsp;
+&nbsp;        // Position of pot
+<b class="fc">&nbsp;        val forbiddenPositions = POT</b>
+&nbsp;
+<b class="fc">&nbsp;        require(</b>
+<b class="fc">&nbsp;            !currentPlayer.bonsaiTree.containsKey(tilePosition)</b>
+<b class="pc">&nbsp;                    &amp;&amp; tilePosition !in forbiddenPositions</b>
+<b class="fc">&nbsp;        ) { &quot;Position is already occupied or is pot&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val tree = currentPlayer.bonsaiTree</b>
+<b class="fc">&nbsp;        val q = tilePosition.first</b>
+<b class="fc">&nbsp;        val r = tilePosition.second</b>
+<b class="fc">&nbsp;        val neighbourTiles = mutableListOf(</b>
+<b class="fc">&nbsp;            tree.getOrDefault(Pair(q + 1, r), null)?.tileType,</b>
+<b class="fc">&nbsp;            tree.getOrDefault(Pair(q, r + 1), null)?.tileType,</b>
+<b class="fc">&nbsp;            tree.getOrDefault(Pair(q - 1, r + 1), null)?.tileType,</b>
+<b class="fc">&nbsp;            tree.getOrDefault(Pair(q - 1, r), null)?.tileType,</b>
+<b class="fc">&nbsp;            tree.getOrDefault(Pair(q, r - 1), null)?.tileType,</b>
+<b class="fc">&nbsp;            tree.getOrDefault(Pair(q + 1, r - 1), null)?.tileType,</b>
+<b class="fc">&nbsp;        ).filterNotNull()</b>
+&nbsp;
+<b class="pc">&nbsp;        require(neighbourTiles.isNotEmpty()) { &quot;There are no adjacent cards&quot; }</b>
+&nbsp;
+&nbsp;//        if (tile.tileType == TileType.WOOD) {
+&nbsp;//            return neighbourTiles.contains(TileType.WOOD)
+&nbsp;//        }
+&nbsp;//        if (tile.tileType == TileType.LEAF) {
+&nbsp;//            return neighbourTiles.contains(TileType.WOOD)
+&nbsp;//        }
+&nbsp;//        if (tile.tileType == TileType.FLOWER) {
+&nbsp;//            return neighbourTiles.contains(TileType.LEAF)
+&nbsp;//        }
+&nbsp;//        if (tile.tileType == TileType.FRUIT) {
+&nbsp;//            if (neighbourTiles.contains(TileType.FRUIT)){
+&nbsp;//                return false
+&nbsp;//            }
+&nbsp;//            if (neighbourTiles.first() == TileType.LEAF &amp;&amp; neighbourTiles.last() == TileType.LEAF) {
+&nbsp;//                return true
+&nbsp;//            }
+&nbsp;//            for (i in 0..&lt;neighbourTiles.size - 1) {
+&nbsp;//                val currentTile = neighbourTiles[i]
+&nbsp;//                val nextTile = neighbourTiles[i + 1]
+&nbsp;//                if (currentTile == TileType.LEAF &amp;&amp; nextTile == TileType.LEAF) {
+&nbsp;//                    return true
+&nbsp;//                }
+&nbsp;//            }
+&nbsp;//        }
+&nbsp;//        return false
+<b class="pc">&nbsp;        return when (tile.tileType) {</b>
+<b class="fc">&nbsp;            TileType.WOOD -&gt; neighbourTiles.contains(TileType.WOOD)</b>
+<b class="fc">&nbsp;            TileType.LEAF -&gt; neighbourTiles.contains(TileType.WOOD)</b>
+<b class="fc">&nbsp;            TileType.FLOWER -&gt; neighbourTiles.contains(TileType.LEAF)</b>
+&nbsp;            TileType.FRUIT -&gt; {
+<b class="fc">&nbsp;                val neighbours = listOf(</b>
+<b class="fc">&nbsp;                    Pair(q + 1, r), Pair(q, r + 1), Pair(q - 1, r + 1),</b>
+<b class="fc">&nbsp;                    Pair(q - 1, r), Pair(q, r - 1), Pair(q + 1, r - 1)</b>
+&nbsp;                )
+<b class="fc">&nbsp;                val leafPositions = neighbours.filter { tree[it]?.tileType == TileType.LEAF }</b>
+&nbsp;
+<b class="fc">&nbsp;                if (leafPositions.size &lt; 2) return false</b>
+&nbsp;
+<b class="pc">&nbsp;                for (i in 0 until leafPositions.size - 1) {</b>
+<b class="fc">&nbsp;                    val firstLeaf = leafPositions[i]</b>
+<b class="fc">&nbsp;                    val secondLeaf = leafPositions[i + 1]</b>
+<b class="fc">&nbsp;                    val firstIndex = neighbours.indexOf(firstLeaf)</b>
+<b class="fc">&nbsp;                    val secondIndex = neighbours.indexOf(secondLeaf)</b>
+<b class="pc">&nbsp;                    if ((firstIndex + 1) % 6 == secondIndex || (secondIndex + 1) % 6 == firstIndex) {</b>
+<b class="pc">&nbsp;                        return !neighbourTiles.contains(TileType.FRUIT)</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;                false</b>
+&nbsp;
+&nbsp;            }
+&nbsp;
+&nbsp;            else -&gt; {
+<b class="nc">&nbsp;                return false</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves the current player from the active bonsai game state.
+&nbsp;     *
+&nbsp;     * This function ensures that a game is active before attempting to access the current player.
+&nbsp;     * If no game or game state is found, an exception is thrown.
+&nbsp;     *
+&nbsp;     * @return The `Player` object representing the current player.
+&nbsp;     * @throws IllegalStateException if no active game or game state exists.
+&nbsp;     */
+&nbsp;    private fun getCurrentPlayer(): Player {
+<b class="pc">&nbsp;        val currentGameState = checkNotNull(rootService.currentGame?.currentBonsaiGameState)</b>
+<b class="fc">&nbsp;        return currentGameState.currentPlayer</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

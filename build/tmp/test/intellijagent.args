@@ -1,0 +1,12 @@
+/Users/gianghoang/Desktop/Projekt2/build/kover/test.ic
+false
+false
+true
+false
+-exclude
+gui\..*
+entity\..*
+.*MainKt.*
+service\.bot\..*
+android\..*
+com\.android\..*

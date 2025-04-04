@@ -1,0 +1,233 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DeepCopyExtensionsKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: DeepCopyExtensionsKt (service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeepCopyExtensionsKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (9/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97,8%
+  </span>
+  <span class="absValue">
+    (45/46)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97,2%
+  </span>
+  <span class="absValue">
+    (318/327)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;import entity.*
+&nbsp;
+&nbsp;/**
+&nbsp; * create recursive deep copies of the game state
+&nbsp; */
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * create deepcopy of BonsaiGameState
+&nbsp; */
+&nbsp;fun BonsaiGameState.deepCopy(): BonsaiGameState {
+<b class="fc">&nbsp;    return BonsaiGameState(</b>
+<b class="fc">&nbsp;        currentPlayer = currentPlayer.deepCopy(),</b>
+<b class="fc">&nbsp;        players = players.map { it.deepCopy() }.toMutableList(),</b>
+<b class="fc">&nbsp;        botSpeed = botSpeed,</b>
+<b class="fc">&nbsp;        currentState = currentState</b>
+<b class="fc">&nbsp;    ).also { copy -&gt;</b>
+<b class="fc">&nbsp;        copy.endGameCounter = this.endGameCounter</b>
+<b class="fc">&nbsp;        copy.zenDeck = this.zenDeck.map { it.deepCopy() }.toMutableList()</b>
+<b class="fc">&nbsp;        copy.faceUpCards = this.faceUpCards.map { it.deepCopy() }.toMutableList()</b>
+<b class="fc">&nbsp;        copy.goalTiles = this.goalTiles.map { it.deepCopy() }.toMutableList()</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * create deepcopy of Player
+&nbsp; */
+&nbsp;fun Player.deepCopy(): Player {
+&nbsp;
+<b class="fc">&nbsp;    val copiedPersonalSupply = this.personalSupply.map {</b>
+<b class="fc">&nbsp;        it.deepCopy()</b>
+<b class="fc">&nbsp;    }.toMutableList()</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    val copiedPlayer = Player(</b>
+<b class="fc">&nbsp;        name = this.name,</b>
+<b class="fc">&nbsp;        playerType = this.playerType,</b>
+<b class="fc">&nbsp;        isLocal = this.isLocal,</b>
+<b class="fc">&nbsp;        color = this.color</b>
+<b class="fc">&nbsp;    ).also { copy -&gt;</b>
+<b class="fc">&nbsp;        copy.bonsaiTree = this.bonsaiTree.mapValues { it.value.deepCopy() }.toMutableMap()</b>
+<b class="fc">&nbsp;        copy.personalSupply = copiedPersonalSupply</b>
+<b class="fc">&nbsp;        copy.collectedCards = this.collectedCards.map { it.deepCopy() }.toMutableList()</b>
+<b class="fc">&nbsp;        copy.claimedGoals = this.claimedGoals.map { it.deepCopy() }.toMutableList()</b>
+<b class="fc">&nbsp;        copy.renouncedGoals = this.renouncedGoals.map { it.deepCopy() }.toMutableList()</b>
+&nbsp;
+<b class="fc">&nbsp;        copy.playableTiles = this.playableTiles.toMutableList()</b>
+<b class="fc">&nbsp;        copy.playableTilesCopy = this.playableTilesCopy.toMutableList()</b>
+&nbsp;
+<b class="fc">&nbsp;        copy.tileCapacity = this.tileCapacity</b>
+<b class="fc">&nbsp;        copy.score = this.score</b>
+<b class="fc">&nbsp;        copy.hasPlayed = this.hasPlayed</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+<b class="fc">&nbsp;    return copiedPlayer</b>
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * create deepcopy of Tile
+&nbsp; */
+&nbsp;
+&nbsp;fun Tile.deepCopy(): Tile {
+<b class="fc">&nbsp;    return Tile(this.q, this.r, this.tileType)</b>
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * create deepcopy of GoalTile
+&nbsp; */
+&nbsp;fun GoalTile.deepCopy(): GoalTile {
+<b class="fc">&nbsp;    return GoalTile(this.goalTileType, this.tier, this.score)</b>
+&nbsp;}
+&nbsp;/**
+&nbsp; * create deepcopy of Card
+&nbsp; */
+&nbsp;fun Card.deepCopy(): Card {
+<b class="fc">&nbsp;    return when (this) {</b>
+<b class="fc">&nbsp;        is GrowthCard -&gt; GrowthCard(this.tileType, this.id)</b>
+<b class="fc">&nbsp;        is HelperCard -&gt; this.deepCopy()</b>
+<b class="fc">&nbsp;        is MasterCard -&gt; this.deepCopy()</b>
+<b class="fc">&nbsp;        is ParchmentCard -&gt; ParchmentCard(this.parchmentTileType, this.parchmentCardType, this.basePoints, this.id)</b>
+<b class="pc">&nbsp;        is ToolCard -&gt; ToolCard(this.id)</b>
+<b class="nc">&nbsp;        else -&gt; throw IllegalArgumentException(&quot;cardtype does not exist: ${this::class.simpleName}&quot;)</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * create deepcopy of HelperCard
+&nbsp; */
+&nbsp;fun HelperCard.deepCopy(): HelperCard {
+<b class="fc">&nbsp;    return HelperCard(this.tileTypes[1], this.id).also { copy -&gt;</b>
+<b class="fc">&nbsp;        copy.tileTypes.clear()</b>
+<b class="fc">&nbsp;        copy.tileTypes.addAll(this.tileTypes)</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * create deepcopy of MasterCard
+&nbsp; */
+&nbsp;fun MasterCard.deepCopy(): MasterCard {
+<b class="fc">&nbsp;    return MasterCard(this.tileTypes.toMutableList(), this.id)</b>
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

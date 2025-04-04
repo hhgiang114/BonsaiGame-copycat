@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.ShowWinnerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:58" hostname="Giang-Hoangs.local" time="0.183">
+  <properties/>
+  <testcase name="testTieWithThreePlayers()" classname="service.ShowWinnerTest" time="0.051"/>
+  <testcase name="testSingleWinner()" classname="service.ShowWinnerTest" time="0.019"/>
+  <testcase name="testGameOver()" classname="service.ShowWinnerTest" time="0.058"/>
+  <testcase name="testTieWithTwoPlayers()" classname="service.ShowWinnerTest" time="0.009"/>
+  <testcase name="testTieWithAllPlayers()" classname="service.ShowWinnerTest" time="0.032"/>
+  <testcase name="testEmptyGameState()" classname="service.ShowWinnerTest" time="0.006"/>
+  <system-out><![CDATA[[DEBUG] Received message of type tools.aqua.bgw.net.common.response.CreateGameResponse@3f5ab755
+[DEBUG] Received CreateGameResponse. Invoking handler for onCreateGameResponse.
+[INFO] Disconnecting.
+[INFO] Connection is now closed.
+[DEBUG] Status code is: 1000. The connection was closed with the following reason: . The closing was initiated by the local host.
+[DEBUG] Disconnection call succeeded without interruption.
+[DEBUG] Found the following GameActionClasses:
+[DEBUG] edu.udo.cs.sopra.ntf.CultivateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.MeditateMessage
+[DEBUG] edu.udo.cs.sopra.ntf.StartGameMessage
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction
+[DEBUG] tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction
+[DEBUG] Found the following GameActionReceivers:
+[DEBUG] onStartGameMessageReceived
+[DEBUG] onCultivateMessage
+[DEBUG] onMeditateMessage
+Test: [Player(name=Tom4, playerType=HUMAN, isLocal=true, color=PURPLE), Player(name=Tom3, playerType=HUMAN, isLocal=true, color=BLUE), Player(name=Tom2, playerType=HUMAN, isLocal=true, color=RED), Player(name=Tom, playerType=HUMAN, isLocal=true, color=BLACK)]
+]]></system-out>
+  <system-err><![CDATA[Exception in thread "DefaultDispatcher-worker-2 @coroutine#58" java.lang.IllegalStateException: SESSION_WITH_ID_ALREADY_EXISTS
+	at service.BonsaiNetworkClient.disconnectAndError(BonsaiNetworkClient.kt:148)
+	at service.BonsaiNetworkClient.onCreateGameResponse(BonsaiNetworkClient.kt:48)
+	at tools.aqua.bgw.net.client.BGWWebSocketClient.messageMapping(BGWWebSocketClient.kt:170)
+	at tools.aqua.bgw.net.client.BGWWebSocketClient.access$messageMapping(BGWWebSocketClient.kt:47)
+	at tools.aqua.bgw.net.client.BGWWebSocketClient$onMessage$1.invokeSuspend(BGWWebSocketClient.kt:147)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:106)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:584)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:793)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:697)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:684)
+	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [CoroutineId(58), "coroutine#58":StandaloneCoroutine{Cancelling}@2270422b, Dispatchers.Default]
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauInitGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauEndGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+GameAction class tools.aqua.bgw.net.protocol.client.service.messages.MauMauShuffleStackGameAction has no valid receiver function. Incoming messages will be delegated to catchall function onGameActionReceived. Consider adding a handler.
+]]></system-err>
+</testsuite>

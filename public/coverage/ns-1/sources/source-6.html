@@ -1,0 +1,276 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > HistoryService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">service</a>
+</div>
+
+<h1>Coverage Summary for Class: HistoryService (service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+<th class="coverageStat 
+">
+  Instruction, %
+</th>
+</tr>
+<tr>
+  <td class="name">HistoryService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    67,4%
+  </span>
+  <span class="absValue">
+    (31/46)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71%
+  </span>
+  <span class="absValue">
+    (240/338)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package service
+&nbsp;
+&nbsp;import entity.BonsaiGame
+&nbsp;import entity.BonsaiGameState
+&nbsp;import entity.Player
+&nbsp;import kotlinx.serialization.json.Json
+&nbsp;import java.io.File
+&nbsp;
+&nbsp;/**
+&nbsp; * The service layer class which contains all actions related to the game states
+&nbsp; * of the bonsai game, including:
+&nbsp; * - redo
+&nbsp; * - undo
+&nbsp; * - save game
+&nbsp; * - continue game
+&nbsp; */
+<b class="fc">&nbsp;class HistoryService(private val rootService: RootService) : AbstractRefreshingService() {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Restores the last action.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - The game has started and is currently running.
+&nbsp;     * - Last action(s) must be undone before.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - Last action(s) is(are) restored.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if there isn&#39;t a next game state.
+&nbsp;     */
+&nbsp;    fun redo() {
+<b class="pc">&nbsp;        require(canRedo())</b>
+<b class="pc">&nbsp;        val game = checkNotNull(rootService.currentGame)</b>
+<b class="pc">&nbsp;        val history = checkNotNull(rootService.currentGame?.history)</b>
+<b class="fc">&nbsp;        history.currentPosition += 1</b>
+<b class="fc">&nbsp;        game.currentBonsaiGameState = history.gameStates[history.currentPosition]</b>
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterRedoOrUndo() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Reverses the last action(s).
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - A previous action must exist.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - The last action(s) is(are) reversed.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if no previous action exists (game has just started).
+&nbsp;     */
+&nbsp;    fun undo() {
+<b class="pc">&nbsp;        require(canUndo())</b>
+<b class="pc">&nbsp;        val game = checkNotNull(rootService.currentGame)</b>
+<b class="pc">&nbsp;        val history = checkNotNull(rootService.currentGame?.history)</b>
+<b class="fc">&nbsp;        history.currentPosition -= 1</b>
+<b class="fc">&nbsp;        game.currentBonsaiGameState = history.gameStates[history.currentPosition]</b>
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterRedoOrUndo() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Saves the current game state.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - The game must exist.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - The game state is saved.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if there is no existing game.
+&nbsp;     */
+&nbsp;    fun saveGame() {
+<b class="pc">&nbsp;        val game = checkNotNull(rootService.currentGame)</b>
+<b class="fc">&nbsp;        val currentPlayer = getCurrentPlayer()</b>
+&nbsp;
+<b class="fc">&nbsp;        check(currentPlayer.isLocal) { &quot;Can only be saved if played local&quot; }</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        val json = Json {</b>
+<b class="fc">&nbsp;            allowStructuredMapKeys = true</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        val encodedState = json.encodeToString(game)</b>
+<b class="fc">&nbsp;        File(&quot;./savedGameState.json&quot;).writeText(encodedState)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if player can redo his turn.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - Player has undone action(s).
+&nbsp;     *
+&nbsp;     * @return true if redo is available, otherwise false.
+&nbsp;     */
+&nbsp;    fun canRedo(): Boolean {
+<b class="pc">&nbsp;        val history = checkNotNull(rootService.currentGame?.history)</b>
+<b class="fc">&nbsp;        return history.gameStates.isNotEmpty() &amp;&amp; history.currentPosition &lt; history.gameStates.size - 1</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if player can undo his turn.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - A previous player action exists.
+&nbsp;     *
+&nbsp;     * @return true if undo is available, otherwise false.
+&nbsp;     */
+&nbsp;    fun canUndo(): Boolean {
+<b class="pc">&nbsp;        val history = checkNotNull(rootService.currentGame?.history)</b>
+<b class="fc">&nbsp;        return history.gameStates.isNotEmpty() &amp;&amp; history.currentPosition &gt; 0</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Continues a previously saved game state.
+&nbsp;     *
+&nbsp;     * preconditions:
+&nbsp;     * - There is an existing game which was saved before.
+&nbsp;     *
+&nbsp;     * post conditions:
+&nbsp;     * - Game has continued with old game state.
+&nbsp;     *
+&nbsp;     * @throws IllegalStateException if there is no previously saved game.
+&nbsp;     */
+&nbsp;    fun continueGame() {
+<b class="fc">&nbsp;        val savedGameState = File(&quot;./savedGameState.json&quot;)</b>
+&nbsp;
+<b class="fc">&nbsp;        check(savedGameState.exists()) { &quot;There is no saved gameState&quot; }</b>
+&nbsp;
+<b class="fc">&nbsp;        val jsonString = savedGameState.readText()</b>
+&nbsp;
+<b class="fc">&nbsp;        val json = Json {</b>
+<b class="fc">&nbsp;            allowStructuredMapKeys = true</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        val game = json.decodeFromString&lt;BonsaiGame&gt;(jsonString)</b>
+<b class="fc">&nbsp;        rootService.currentGame = game</b>
+<b class="fc">&nbsp;        onAllRefreshables { refreshAfterGameStart() }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // help function to get current player
+&nbsp;    private fun getCurrentPlayer(): Player {
+<b class="fc">&nbsp;        return getCurrentGameState().currentPlayer</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // help function to get current game state
+&nbsp;    private fun getCurrentGameState(): BonsaiGameState {
+<b class="pc">&nbsp;        return checkNotNull(rootService.currentGame?.currentBonsaiGameState)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-20 23:58</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.RefillBoardTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:57" hostname="Giang-Hoangs.local" time="0.006">
+  <properties/>
+  <testcase name="test refillBoard when removing the second faceUp Card()" classname="service.RefillBoardTest" time="0.001"/>
+  <testcase name="test refillBoard when removing the fourth faceUp Card()" classname="service.RefillBoardTest" time="0.001"/>
+  <testcase name="test refillBoard when removing the third faceUp Card()" classname="service.RefillBoardTest" time="0.001"/>
+  <testcase name="test refillBoard when removing the first faceUp Card()" classname="service.RefillBoardTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[[2025.03.20 23:57:57] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentFieldVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:57] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment$SegmentMethodVisitor: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+[2025.03.20 23:57:57] (Coverage): Error during class instrumentation: org.apache.commons.compress.harmony.pack200.Segment: java.lang.RuntimeException: java.io.IOException: Class org/objectweb/asm/Attribute not found
+]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.CanUndoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:30" hostname="Giang-Hoangs.local" time="0.003">
+  <properties/>
+  <testcase name="testCanUndoIfHistoryPosGreater0()" classname="service.CanUndoTest" time="0.0"/>
+  <testcase name="testCanNotUndoIfGameStateEmpty()" classname="service.CanUndoTest" time="0.0"/>
+  <testcase name="testUndoValid()" classname="service.CanUndoTest" time="0.0"/>
+  <testcase name="testCanNotUndoIfHistoryPos0()" classname="service.CanUndoTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

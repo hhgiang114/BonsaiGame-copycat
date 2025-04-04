@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.RemoveFromTreeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-03-20T22:57:57" hostname="Giang-Hoangs.local" time="0.003">
+  <properties/>
+  <testcase name="Remove the chosen tile and the connected one()" classname="service.RemoveFromTreeTest" time="0.001"/>
+  <testcase name="Remove only the chosen Tile test()" classname="service.RemoveFromTreeTest" time="0.0"/>
+  <testcase name="testRemoveFromTreeWhenEmpty()" classname="service.RemoveFromTreeTest" time="0.0"/>
+  <system-out><![CDATA[{(0, 0)=Tile Type: WOOD, (1, -2)=Tile Type: LEAF, (0, -2)=Tile Type: LEAF, (-1, -1)=Tile Type: LEAF, (0, -1)=Tile Type: WOOD, (1, -1)=Tile Type: LEAF, (-1, -2)=Tile Type: FRUIT, (1, -3)=Tile Type: FRUIT, (2, -2)=Tile Type: FRUIT}
+{(0, 0)=Tile Type: WOOD, (1, -2)=Tile Type: LEAF, (0, -2)=Tile Type: LEAF, (-1, -1)=Tile Type: LEAF, (0, -1)=Tile Type: WOOD, (-1, -2)=Tile Type: FRUIT, (1, -3)=Tile Type: FRUIT}
+{(0, 0)=Tile Type: WOOD, (1, -2)=Tile Type: LEAF, (0, -2)=Tile Type: LEAF, (-1, -1)=Tile Type: LEAF, (0, -1)=Tile Type: WOOD, (-1, -2)=Tile Type: FRUIT, (1, -3)=Tile Type: FRUIT, (2, -2)=Tile Type: FLOWER}
+{(0, 0)=Tile Type: WOOD, (1, -2)=Tile Type: LEAF, (0, -2)=Tile Type: LEAF, (-1, -1)=Tile Type: LEAF, (0, -1)=Tile Type: WOOD, (1, -1)=Tile Type: LEAF}
+{(0, 0)=Tile Type: WOOD, (1, -2)=Tile Type: LEAF, (0, -2)=Tile Type: LEAF, (-1, -1)=Tile Type: LEAF, (0, -1)=Tile Type: WOOD}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

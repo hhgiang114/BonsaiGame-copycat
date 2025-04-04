@@ -1,0 +1,12 @@
+{
+  "format": "kover-agg",
+  "reports": [{
+      "ic": "/Users/gianghoang/Desktop/Projekt2/build/tmp/koverXmlReport/agg-ic.ic",
+      "smap": "/Users/gianghoang/Desktop/Projekt2/build/tmp/koverXmlReport/agg-smap.smap"
+    }],
+  "modules": [{"sources": [
+        "/Users/gianghoang/Desktop/Projekt2/src/main/resources",
+        "/Users/gianghoang/Desktop/Projekt2/src/main/kotlin"
+      ]}],
+  "xml": "/Users/gianghoang/Desktop/Projekt2/public/coverage/report.xml"
+}
