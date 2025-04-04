@@ -20,36 +20,38 @@ import util.SECRET_KEY
  *
  */
 class JoinScene(bonsaiApplication: BonsaiApplication, rootService: RootService) : MenuScene(
-    1920,1080, ImageVisual("Backgrounds/Hintergrund2.png",1920,1080)
-) , Refreshable {
+    1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)
+), Refreshable {
 
     private val titleLabel = Label(
         0,
         0,
         800,
-        210,
+        300,
         "BONSAI",
-        font = Font(164.0, Color(0x000000), "Arial Black", Font.FontWeight.BOLD),)
+        font = Font(200, Color(0x000000), "Osake Regular", Font.FontWeight.NORMAL)
+    )
 
     private val sessionTextField =
-            TextFieldStyle2(
-                posX = 875,
-                posY = 275,
-                prompt = "SESSION ID",
-            )
+        TextFieldStyle2(
+            posX = 875,
+//            posY = 275,
+            posY = 150,
+            prompt = "SESSION ID",
+        )
 
 
     private val nameTextField =
         TextFieldStyle2(
             posX = 875,
-            posY = 410,
+            posY = 285,
             prompt = "NAME",
         )
 
     private val easyBotButton =
         CheckBoxButton2(
             posX = 1500,
-            posY = 410,
+            posY = 285,
             text = "EASY BOT",
         ).apply {
             onMouseClicked = {
@@ -60,7 +62,7 @@ class JoinScene(bonsaiApplication: BonsaiApplication, rootService: RootService) 
     private val hardBotButton =
         CheckBoxButton2(
             posX = 1635,
-            posY = 410,
+            posY = 285,
             text = "HARD BOT",
         ).apply {
             onMouseClicked = {
@@ -71,7 +73,7 @@ class JoinScene(bonsaiApplication: BonsaiApplication, rootService: RootService) 
     private val backButton =
         ButtonStyle1(
             posX = 875,
-            posY = 545,
+            posY = 420,
             width = 280,
             height = 110,
             text = "BACK",
@@ -85,7 +87,7 @@ class JoinScene(bonsaiApplication: BonsaiApplication, rootService: RootService) 
     private val joinButton =
         ButtonStyle1(
             posX = 1175,
-            posY = 545,
+            posY = 420,
             width = 280,
             height = 110,
             text = "JOIN",

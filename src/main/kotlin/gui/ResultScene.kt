@@ -19,7 +19,7 @@ class ResultScene(
     private val bonsaiApplication: BonsaiApplication,
     private val rootService: RootService
 ) :
-    MenuScene(1920, 1080, ImageVisual("Backgrounds/Hintergrund2.png", 1920, 1080)), Refreshable {
+    MenuScene(1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)), Refreshable {
 
     // Display scene name
     private val titleLabel = Label(

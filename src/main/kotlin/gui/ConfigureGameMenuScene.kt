@@ -13,7 +13,6 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
-import util.PRIMARY_COLOUR
 import util.SECONDARY_COLOUR
 import util.TERTIARY_COLOUR
 import util.*
@@ -28,7 +27,9 @@ class ConfigureGameMenuScene(
     private val bonsaiApplication: BonsaiApplication,
     private val rootService: RootService
 ) :
-    MenuScene(1920, 1080, ColorVisual(Color(PRIMARY_COLOUR))), Refreshable {
+    MenuScene(
+        1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)
+    ), Refreshable {
 
     private val playerColors = mutableListOf(
         ColorType.RED,
@@ -55,67 +56,74 @@ class ConfigureGameMenuScene(
 
     private val contentPlayerPane =
         Pane<UIComponent>(
-            posX = 80,
+            posX = 40,
             posY = 40,
             width = 1100,
             height = 1000,
             visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
                 style.borderRadius = BorderRadius(20.0)
+                transparency = 0.3
+
             }
         )
 
     private val contentGoalTilePane =
         Pane<UIComponent>(
-            posX = 1260,
+            posX = 1200,
             posY = 40,
-            width = 580,
+            width = 680,
             height = 1000,
             visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
                 style.borderRadius = BorderRadius(20.0)
+                transparency = 0.3
             }
         )
 
     private val titleLabel =
         Label(
-            posX = 20,
+            posX = 40,
             posY = 20,
             width = 1000,
             height = 100,
             text = "CONFIGURE GAME",
-            font = Font(72, Color(0x000000), "ARIAL BLACK"),
+            font = Font(72, Color(0x000000), "Okashi Regular"),
         )
 
     private val titleGoalTileLabel =
         Label(
-            posX = 20,
+            posX = 60,
             posY = 20,
             width = 500,
             height = 100,
             text = "CHOOSE 3",
-            font = Font(42, Color(0x000000), "ARIAL BLACK"),
+            font = Font(42, Color(0x000000), "Okashi Regular"),
 
             )
 
     private val titleGoalTileLabel2 =
         Label(
-            posX = 20,
+            posX = 60,
             posY = 80,
             width = 500,
             height = 100,
             text = "GOAL TILES",
-            font = Font(42, Color(0x000000), "ARIAL BLACK"),
+            font = Font(42, Color(0x000000), "Okashi Regular"),
 
             )
 
     private val woodGoalTileLabel =
-        LabelStyle2(
+        Label(
+            width = 540,
+            height = 110,
             posX = 20,
             posY = 200,
-            text = "WOOD"
+            visual = ImageVisual("GoalTiles/Brown.png").apply {
+                style.borderRadius = BorderRadius(20.0)
+            }
         )
 
     private val woodGoalTileButton = CheckBoxButton(
-        posX = 390,
+        posX = 560,
         posY = 200
     ).apply {
         onMouseClicked = {
@@ -125,14 +133,18 @@ class ConfigureGameMenuScene(
     }
 
     private val leafGoalTileLabel =
-        LabelStyle2(
+        Label(
+            width = 540,
+            height = 110,
             posX = 20,
             posY = 330,
-            text = "LEAF"
+            visual = ImageVisual("GoalTiles/Green.png").apply {
+                style.borderRadius = BorderRadius(20.0)
+            }
         )
 
     private val leafGoalTileButton = CheckBoxButton(
-        posX = 390,
+        posX = 560,
         posY = 330
     ).apply {
         onMouseClicked = {
@@ -142,14 +154,19 @@ class ConfigureGameMenuScene(
     }
 
     private val fruitGoalTileLabel =
-        LabelStyle2(
+        Label(
             posX = 20,
             posY = 460,
-            text = "FRUIT"
+            width = 540,
+            height = 110,
+            visual = ImageVisual("GoalTiles/Orange.png").apply {
+                style.borderRadius = BorderRadius(20.0)
+            }
+
         )
 
     private val fruitGoalTileButton = CheckBoxButton(
-        posX = 390,
+        posX = 560,
         posY = 460
     ).apply {
         onMouseClicked = {
@@ -159,14 +176,18 @@ class ConfigureGameMenuScene(
     }
 
     private val flowerGoalTileLabel =
-        LabelStyle2(
+        Label(
             posX = 20,
             posY = 590,
-            text = "FLOWER"
+            width = 540,
+            height = 110,
+            visual = ImageVisual("GoalTiles/Pink.png").apply {
+                style.borderRadius = BorderRadius(20.0)
+            }
         )
 
     private val flowerGoalTileButton = CheckBoxButton(
-        posX = 390,
+        posX = 560,
         posY = 590
     ).apply {
         onMouseClicked = {
@@ -176,14 +197,18 @@ class ConfigureGameMenuScene(
     }
 
     private val positionGoalTileLabel =
-        LabelStyle2(
+        Label(
             posX = 20,
             posY = 720,
-            text = "POSITION"
+            width = 540,
+            height = 110,
+            visual = ImageVisual("GoalTiles/Blue.png").apply {
+                style.borderRadius = BorderRadius(20.0)
+            }
         )
 
     private val positionGoalTileButton = CheckBoxButton(
-        posX = 390,
+        posX = 560,
         posY = 720
     ).apply {
         onMouseClicked = {
@@ -192,12 +217,23 @@ class ConfigureGameMenuScene(
         }
     }
 
-    private val randomGoalTileLabel =
-        LabelStyle2(
-            posX = 20,
+    private val randomGoalTileButton =
+        Button(
+            posX = 175,
             posY = 870,
-            text = "RANDOM"
-        )
+            text = "RANDOM",
+            width = 330,
+            height = 110,
+            font = Font(24.0, Color.WHITE, "Okashi italic", Font.FontWeight.LIGHT),
+            visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
+                style.borderRadius = BorderRadius(20.0)
+            }
+        ).apply {
+            onMouseClicked = {
+                clearSelectedGoalTiles()
+                selectRandomGoalTiles()
+            }
+        }
 
     private val turnLabel = Label(
         posX = 40,
@@ -205,7 +241,7 @@ class ConfigureGameMenuScene(
         width = 100,
         height = 40,
         text = "TURN",
-        font = Font(30, Color(0x000000), "ARIAL BLACK")
+        font = Font(30, Color(0x000000), "Okashi italic")
     )
 
     private val playerLabel = Label(
@@ -214,7 +250,7 @@ class ConfigureGameMenuScene(
         width = 200,
         height = 40,
         text = "PLAYER",
-        font = Font(30, Color(0x000000), "ARIAL BLACK")
+        font = Font(30, Color(0x000000), "Okashi italic")
     )
 
     private val easyLabel = Label(
@@ -223,7 +259,7 @@ class ConfigureGameMenuScene(
         width = 100,
         height = 40,
         text = "EASY",
-        font = Font(28, Color(0x000000), "ARIAL BLACK")
+        font = Font(28, Color(0x000000), "Okashi italic")
     )
 
     private val hardLabel = Label(
@@ -232,21 +268,21 @@ class ConfigureGameMenuScene(
         width = 100,
         height = 40,
         text = "HARD",
-        font = Font(28, Color(0x000000), "ARIAL BLACK")
+        font = Font(28, Color(0x000000), "Okashi italic")
     )
 
     /**
      * deselects all goal tiles and chooses and selects three goal tiles at random
      */
-    private val randomGoalTileButton = CheckBoxButton(
-        posX = 390,
-        posY = 870
-    ).apply {
-        onMouseClicked = {
-            clearSelectedGoalTiles()
-            selectRandomGoalTiles()
-        }
-    }
+//    private val randomGoalTileButton = CheckBoxButton(
+//        posX = 390,
+//        posY = 870
+//    ).apply {
+//        onMouseClicked = {
+//            clearSelectedGoalTiles()
+//            selectRandomGoalTiles()
+//        }
+//    }
 
     private val addPlayerButton =
         Button(
@@ -402,14 +438,27 @@ class ConfigureGameMenuScene(
                             }
                         if (name.length > MAX_NAME_LENGTH) name = "${name.first().uppercaseChar()}."
                         entity.Player(name, playerType, true, color)
-                    }.toMutableList()
 
-                    rootService.gameService.startNewGame(
-                        guiPlayer, false,
-                        selectedGoalTiles
-                    )
-                    bonsaiApplication.hideMenuScene()
-                    bonsaiApplication.showGameScene()
+
+                    }.toMutableList()
+                    val checkedCount = listOf(
+                        flowerGoalTileButton.isChecked,
+                        fruitGoalTileButton.isChecked,
+                        woodGoalTileButton.isChecked,
+                        positionGoalTileButton.isChecked,
+                        leafGoalTileButton.isChecked
+                    ).count { it }
+
+                    if (playerColors.distinct().size == playerColors.size && guiPlayer.size >= 2 && checkedCount == 3) {
+
+                            rootService.gameService.startNewGame(
+                                guiPlayer, false,
+                                selectedGoalTiles
+                            )
+                            bonsaiApplication.hideMenuScene()
+                            bonsaiApplication.showGameScene()
+                        }
+
                 }
             },
             playerTurn,
@@ -432,8 +481,7 @@ class ConfigureGameMenuScene(
             flowerGoalTileButton,
             positionGoalTileLabel,
             positionGoalTileButton,
-            randomGoalTileLabel,
-            randomGoalTileButton,
+            randomGoalTileButton
         )
         addComponents(contentPlayerPane, contentGoalTilePane)
 
@@ -544,7 +592,6 @@ class ConfigureGameMenuScene(
             change()
         }
     }
-
 
 
     private fun highlightPlayers(index: Int) {

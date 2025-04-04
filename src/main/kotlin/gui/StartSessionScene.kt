@@ -13,15 +13,15 @@ import util.SECRET_KEY
  * The [StartSessionScene] for network play
  */
 class StartSessionScene(bonsaiApplication: BonsaiApplication, rootService: RootService) : MenuScene(
-    1920, 1080, ImageVisual("Backgrounds/Hintergrund2.png", 1920, 1080)
+    1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)
 ), Refreshable {
     private val titleLabel = Label(
         0,
         0,
         800,
-        210,
+        300,
         "BONSAI",
-        font = Font(164.0, Color(0x000000), "Arial Black", Font.FontWeight.BOLD),
+        font = Font(200, Color(0x000000), "Osake Regular", Font.FontWeight.NORMAL)
     )
 
     private val sessionTextField =

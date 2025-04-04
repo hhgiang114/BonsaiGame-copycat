@@ -44,7 +44,10 @@ class BonsaiApplication : BoardGameApplication("Bonsai", 1920, 1080), Refreshabl
         )
 
         loadFont("arial_black.ttf", "Arial Black", Font.FontWeight.NORMAL)
-        //this.showGameScene(gameScene)
+        loadFont("Font/Osake-x3oqj.otf", "Osake Regular", Font.FontWeight.NORMAL)
+        loadFont("Font/Okashi-Regular.otf", "Okashi Regular", Font.FontWeight.NORMAL)
+        loadFont("Font/Okashi-italic.otf", "Okashi italic", Font.FontWeight.NORMAL)
+
         showMainMenuScene()
     }
 

@@ -23,7 +23,7 @@ class ButtonStyle1(
     width = width,
     height = height,
     text = text,
-    font = Font(24.0, Color(TERTIARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(24.0, Color(TERTIARY_COLOUR), "Okashi Regular", Font.FontWeight.NORMAL),
     visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -40,7 +40,7 @@ class ButtonStyle2(
     width = 250,
     height = 100,
     text = text,
-    font = Font(24.0, Color(PRIMARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(24.0, Color.WHITE,"Okashi Regular", Font.FontWeight.BOLD),
     visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -57,7 +57,7 @@ class LabelStyle1(
     width = 450,
     height = 100,
     text = text,
-    font = Font(24.0, Color(PRIMARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(24.0, Color(PRIMARY_COLOUR), "Okashi italic", Font.FontWeight.BOLD),
     visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -74,7 +74,7 @@ class LabelStyle2(
     width = 330,
     height = 110,
     text = text,
-    font = Font(24.0, Color(PRIMARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(24.0, Color(PRIMARY_COLOUR), "Okashi italic", Font.FontWeight.LIGHT),
     visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -91,7 +91,7 @@ class TextFieldStyle1(
     width = 600,
     height = 110,
     prompt = prompt,
-    font = Font(48.0, Color(PRIMARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(48.0, Color(PRIMARY_COLOUR), "Okashi italic", Font.FontWeight.LIGHT),
     visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -108,7 +108,7 @@ class TextFieldStyle2(
     width = 600,
     height = 110,
     prompt = prompt,
-    font = Font(48.0, Color(TERTIARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(48.0, Color(TERTIARY_COLOUR), "Okashi italic", Font.FontWeight.LIGHT),
     visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -125,7 +125,7 @@ class TurnLabel(
     width = 110,
     height = 110,
     text = text,
-    font = Font(48.0, Color(PRIMARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(48.0, Color.WHITE, "Okashi italic", Font.FontWeight.NORMAL),
     visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }
@@ -212,7 +212,7 @@ class CheckBoxButton2(
     width = 110,
     height = 110,
     text = text,
-    font = Font(16.0, Color(TERTIARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
+    font = Font(16.0, Color(TERTIARY_COLOUR), "Okashi Italic", Font.FontWeight.BOLD),
     visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
         style.borderRadius = BorderRadius(20.0)
     }

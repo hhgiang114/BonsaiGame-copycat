@@ -13,29 +13,30 @@ import util.TERTIARY_COLOUR
 /**
  * The [WaitingScene] for network play
  */
-class WaitingScene (private val bonsaiApplication: BonsaiApplication) : MenuScene(
-    1920,1080, ImageVisual("Backgrounds/Hintergrund2.png",1920,1080)
-) , Refreshable {
+class WaitingScene(private val bonsaiApplication: BonsaiApplication) : MenuScene(
+    1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)
+), Refreshable {
 
     private val titleLabel = Label(
-        0,
-        0,
+        560,
+        100,
         800,
-        210,
+        300,
         "BONSAI",
-        font = Font(164.0, Color(0x000000), "Arial Black", Font.FontWeight.BOLD),)
+        font = Font(200, Color(0x000000), "Osake Regular", Font.FontWeight.NORMAL)
+    )
 
     private val textLabel =
         Label(
-            posX = 875,
-            posY = 275,
+            posX = 460,
+            posY = 270,
             width = 1000,
             height = 500,
-            text = "WAITING FOR HOST TO START GAME" ,
-            font = Font(48.0, Color(TERTIARY_COLOUR), "Arial Black", Font.FontWeight.BOLD),
-            visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
-            style.borderRadius = BorderRadius(20.0)
-                }
+            text = "WAITING FOR HOST TO START GAME",
+//            font = Font(48.0, Color(TERTIARY_COLOUR), "Okashi italic", Font.FontWeight.BOLD),
+            font = Font(48.0, Color(0x141B1D), "Okashi italic", Font.FontWeight.BOLD),
+
+            visual = ColorVisual(Color.TRANSPARENT)
         )
 
     init {

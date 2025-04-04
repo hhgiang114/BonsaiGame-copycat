@@ -11,6 +11,7 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ImageVisual
 import util.PRIMARY_COLOUR
 import util.SECONDARY_COLOUR
 import util.TERTIARY_COLOUR
@@ -24,7 +25,9 @@ import util.*
 class HostScene(
     private val bonsaiApplication: BonsaiApplication,
     private val rootService: RootService
-) : MenuScene(1920, 1080, ColorVisual(Color(PRIMARY_COLOUR))), Refreshable {
+) : MenuScene(
+    1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)
+), Refreshable {
 
     private val playerColors = mutableListOf(
         ColorType.RED,
@@ -72,7 +75,7 @@ class HostScene(
         )
 
     private val titleLabel =
-        Label (
+        Label(
             posX = 20,
             posY = 20,
             width = 1000,
@@ -89,7 +92,7 @@ class HostScene(
             height = 100,
             text = "CHOOSE 3",
             font = Font(42, Color(0x000000), "ARIAL BLACK"),
-            )
+        )
 
     private val titleGoalTileLabel2 =
         Label(
