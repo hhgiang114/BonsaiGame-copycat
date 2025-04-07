@@ -315,7 +315,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         Pane<ComponentView>(
             posX = 540,
             posY = 260,
-            width = 1020,
+            width = 920,
             height = 100,
             visual = ColorVisual(255, 255, 255, 0.5).apply {
                 style.borderRadius = BorderRadius(20.0)
@@ -342,9 +342,9 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     private val undoButton =
         Button(
             posX = 20,
-            posY = 30,
+            posY = 20,
             width = 50,
-            height = 40,
+            height = 50,
             visual = ColorVisual(Color(0xffffff)).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
@@ -366,10 +366,10 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
      */
     private val redoButton =
         Button(
-            posX = 230,
-            posY = 30,
+            posX = 350,
+            posY = 20,
             width = 50,
-            height = 40,
+            height = 50,
             visual = ColorVisual(Color(0xffffff)).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
@@ -387,10 +387,10 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
     private val saveButton =
         Button(
-            posX = 20, // Adjusted to fit within the buttonPane
-            posY = 100, // Adjusted to fit within the buttonPane
+            posX = 80, // Adjusted to fit within the buttonPane
+            posY = 20, // Adjusted to fit within the buttonPane
             width = 260,
-            height = 35,
+            height = 50,
             visual = ColorVisual(221, 136, 136).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
@@ -410,9 +410,9 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
     // right side pane
     private val buttonPane = Pane<UIComponent>(
-        posX = 1600,
+        posX = 1470,
         posY = 20,
-        width = 300,
+        width = 420,
         height = 1040,
         visual = ColorVisual(255, 255, 255, 0.5).apply {
             style.borderRadius = BorderRadius(20.0)
@@ -719,19 +719,23 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         )
         treeHexagonGrids.add(treeHexagonGrid)
 
+        //HERE SOME CHANGES TRANSPARENT
         val targetLayout = Pane<ComponentView>(
             width = 2000,
             height = 2000,
-            visual = ColorVisual(Color.TRANSPARENT)
+            visual = ColorVisual(Color.WHITE)
         ).apply {
             this.add(treeHexagonGrid)
         }
         targetLayouts.add(targetLayout)
 
+        //HIHI
         val treePane = CameraPane(
-            posX = 240,
+            //posX = 240,
+            posX = 190,
             posY = 0,
-            width = 1320,
+            //width = 1320,
+            width = 1260,
             height = 680,
             target = targetLayout,
             limitBounds = true

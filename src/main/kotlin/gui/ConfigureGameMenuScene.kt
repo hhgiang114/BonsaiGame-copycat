@@ -1,912 +1,1 @@
-package gui
-
-import entity.ColorType
-import entity.GoalTileType
-import entity.PlayerType
-import service.RootService
-import tools.aqua.bgw.components.layoutviews.Pane
-import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.core.Color
-import tools.aqua.bgw.core.MenuScene
-import tools.aqua.bgw.style.BorderRadius
-import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.visual.CompoundVisual
-import tools.aqua.bgw.visual.ImageVisual
-import util.SECONDARY_COLOUR
-import util.TERTIARY_COLOUR
-import util.*
-
-const val MAX_NAME_LENGTH = 5
-
-/**
- * The [ConfigureGameMenuScene] is a [MenuScene] to configure the starting parameters
- * of a game of bonsai in hot seat mode
- */
-class ConfigureGameMenuScene(
-    private val bonsaiApplication: BonsaiApplication,
-    private val rootService: RootService
-) :
-    MenuScene(
-        1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)
-    ), Refreshable {
-
-    private val playerColors = mutableListOf(
-        ColorType.RED,
-        ColorType.PURPLE,
-        ColorType.BLACK,
-        ColorType.BLUE
-    )
-
-    private val availableColors = mutableListOf(
-        ColorType.RED,
-        ColorType.PURPLE,
-        ColorType.BLACK,
-        ColorType.BLUE
-    )
-
-    private val colorMapping = mapOf(
-        ColorType.RED to COLOUR_RED,
-        ColorType.PURPLE to COLOUR_PURPLE,
-        ColorType.BLACK to COLOUR_BLACK,
-        ColorType.BLUE to COLOUR_BLUE
-    )
-
-    private val selectedGoalTiles = mutableListOf<GoalTileType>()
-
-    private val contentPlayerPane =
-        Pane<UIComponent>(
-            posX = 40,
-            posY = 40,
-            width = 1100,
-            height = 1000,
-            visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
-                style.borderRadius = BorderRadius(20.0)
-                transparency = 0.3
-
-            }
-        )
-
-    private val contentGoalTilePane =
-        Pane<UIComponent>(
-            posX = 1200,
-            posY = 40,
-            width = 680,
-            height = 1000,
-            visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
-                style.borderRadius = BorderRadius(20.0)
-                transparency = 0.3
-            }
-        )
-
-    private val titleLabel =
-        Label(
-            posX = 40,
-            posY = 20,
-            width = 1000,
-            height = 100,
-            text = "CONFIGURE GAME",
-            font = Font(72, Color(0x000000), "Okashi Regular"),
-        )
-
-    private val titleGoalTileLabel =
-        Label(
-            posX = 60,
-            posY = 20,
-            width = 500,
-            height = 100,
-            text = "CHOOSE 3",
-            font = Font(42, Color(0x000000), "Okashi Regular"),
-
-            )
-
-    private val titleGoalTileLabel2 =
-        Label(
-            posX = 60,
-            posY = 80,
-            width = 500,
-            height = 100,
-            text = "GOAL TILES",
-            font = Font(42, Color(0x000000), "Okashi Regular"),
-
-            )
-
-    private val woodGoalTileLabel =
-        Label(
-            width = 540,
-            height = 110,
-            posX = 20,
-            posY = 200,
-            visual = ImageVisual("GoalTiles/Brown.png").apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        )
-
-    private val woodGoalTileButton = CheckBoxButton(
-        posX = 560,
-        posY = 200
-    ).apply {
-        onMouseClicked = {
-            change()
-            toggleGoalTile(GoalTileType.BROWN, this)
-        }
-    }
-
-    private val leafGoalTileLabel =
-        Label(
-            width = 540,
-            height = 110,
-            posX = 20,
-            posY = 330,
-            visual = ImageVisual("GoalTiles/Green.png").apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        )
-
-    private val leafGoalTileButton = CheckBoxButton(
-        posX = 560,
-        posY = 330
-    ).apply {
-        onMouseClicked = {
-            change()
-            toggleGoalTile(GoalTileType.GREEN, this)
-        }
-    }
-
-    private val fruitGoalTileLabel =
-        Label(
-            posX = 20,
-            posY = 460,
-            width = 540,
-            height = 110,
-            visual = ImageVisual("GoalTiles/Orange.png").apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-
-        )
-
-    private val fruitGoalTileButton = CheckBoxButton(
-        posX = 560,
-        posY = 460
-    ).apply {
-        onMouseClicked = {
-            change()
-            toggleGoalTile(GoalTileType.ORANGE, this)
-        }
-    }
-
-    private val flowerGoalTileLabel =
-        Label(
-            posX = 20,
-            posY = 590,
-            width = 540,
-            height = 110,
-            visual = ImageVisual("GoalTiles/Pink.png").apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        )
-
-    private val flowerGoalTileButton = CheckBoxButton(
-        posX = 560,
-        posY = 590
-    ).apply {
-        onMouseClicked = {
-            change()
-            toggleGoalTile(GoalTileType.PINK, this)
-        }
-    }
-
-    private val positionGoalTileLabel =
-        Label(
-            posX = 20,
-            posY = 720,
-            width = 540,
-            height = 110,
-            visual = ImageVisual("GoalTiles/Blue.png").apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        )
-
-    private val positionGoalTileButton = CheckBoxButton(
-        posX = 560,
-        posY = 720
-    ).apply {
-        onMouseClicked = {
-            change()
-            toggleGoalTile(GoalTileType.BLUE, this)
-        }
-    }
-
-    private val randomGoalTileButton =
-        Button(
-            posX = 175,
-            posY = 870,
-            text = "RANDOM",
-            width = 330,
-            height = 110,
-            font = Font(24.0, Color.WHITE, "Okashi italic", Font.FontWeight.LIGHT),
-            visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        ).apply {
-            onMouseClicked = {
-                clearSelectedGoalTiles()
-                selectRandomGoalTiles()
-            }
-        }
-
-    private val turnLabel = Label(
-        posX = 40,
-        posY = 220,
-        width = 100,
-        height = 40,
-        text = "TURN",
-        font = Font(30, Color(0x000000), "Okashi italic")
-    )
-
-    private val playerLabel = Label(
-        posX = 380,
-        posY = 220,
-        width = 200,
-        height = 40,
-        text = "PLAYER",
-        font = Font(30, Color(0x000000), "Okashi italic")
-    )
-
-    private val easyLabel = Label(
-        posX = 830,
-        posY = 220,
-        width = 100,
-        height = 40,
-        text = "EASY",
-        font = Font(28, Color(0x000000), "Okashi italic")
-    )
-
-    private val hardLabel = Label(
-        posX = 980,
-        posY = 220,
-        width = 100,
-        height = 40,
-        text = "HARD",
-        font = Font(28, Color(0x000000), "Okashi italic")
-    )
-
-    /**
-     * deselects all goal tiles and chooses and selects three goal tiles at random
-     */
-//    private val randomGoalTileButton = CheckBoxButton(
-//        posX = 390,
-//        posY = 870
-//    ).apply {
-//        onMouseClicked = {
-//            clearSelectedGoalTiles()
-//            selectRandomGoalTiles()
-//        }
-//    }
-
-    private val addPlayerButton =
-        Button(
-            width = 110,
-            height = 110,
-            posX = 435,
-            posY = 410,
-            visual = CompoundVisual(
-                ColorVisual(Color(TERTIARY_COLOUR)).apply {
-                    style.borderRadius = BorderRadius(20.0)
-                },
-                ImageVisual("add.png")
-            ),
-        ).apply {
-            onMouseClicked = {
-                addPlayer()
-            }
-        }
-
-    private val startButton = ButtonStyle2(
-        posX = 715,
-        posY = 830,
-        text = "START"
-    )
-
-    private val backButton = ButtonStyle2(
-        posX = 175,
-        posY = 830,
-        text = "BACK"
-    ).apply {
-        onMouseClicked = {
-            bonsaiApplication.hideMenuScene()
-            bonsaiApplication.showMainMenuScene()
-        }
-    }
-
-    private val playerOrderButton = ButtonStyle2(
-        posX = 445,
-        posY = 830,
-        text = "RANDOM ORDER"
-    ).apply {
-        onMouseClicked = {
-            randomizePlayerOrder()
-        }
-    }
-
-    private val playerTurn = TurnLabel(
-        posX = 40,
-        posY = 270,
-    ).apply {
-        text = "1"
-        onMouseClicked = {
-            swapPlayerWithNext(0)
-        }
-        onMouseEntered = {
-            highlightPlayers(0)
-        }
-        onMouseExited = {
-            removeHighlight()
-        }
-    }
-
-    private val playerInput = TextFieldStyle1(
-        posX = 190,
-        posY = 270,
-        prompt = "INPUT NAME"
-    )
-
-    private val playerColour = ColourButton(
-        posX = 600,
-        posY = 280
-    )
-
-    private val playerRemove = SquareButton(
-        posX = 680,
-        posY = 270
-    ).apply {
-        // When the button is clicked, the first player is removed
-        onMouseClicked = {
-            removePlayer(0)
-        }
-    }
-
-    private val playerEasyBot = CheckBoxButton(
-        posX = 830,
-        posY = 270
-    ).apply {
-        onMouseClicked = {
-            if (!isChecked) {
-                if (playerHardBots[0].isChecked) {
-                    playerHardBots[0].change()
-                }
-            }
-            change()
-        }
-    }
-
-    private val playerHardBot = CheckBoxButton(
-        posX = 980,
-        posY = 270
-    ).apply {
-        onMouseClicked = {
-            if (!isChecked) {
-                if (playerEasyBots[0].isChecked) {
-                    playerEasyBots[0].change()
-                }
-            }
-            change()
-        }
-    }
-
-    // Group all player inputs in lists to easily manage them
-
-    private val playerTurns: MutableList<Label> = mutableListOf(playerTurn)
-    private val playerInputs: MutableList<TextField> = mutableListOf(playerInput)
-    private val playerColours: MutableList<Button> = mutableListOf(playerColour)
-    private val playerRemoves: MutableList<Button> = mutableListOf(playerRemove)
-    private val playerEasyBots: MutableList<CheckBoxButton> = mutableListOf(playerEasyBot)
-    private val playerHardBots: MutableList<CheckBoxButton> = mutableListOf(playerHardBot)
-
-
-    init {
-        contentPlayerPane.addAll(
-            titleLabel,
-            addPlayerButton,
-            backButton,
-            playerOrderButton,
-            turnLabel,
-            playerLabel,
-            easyLabel,
-            hardLabel,
-            startButton.apply {
-                onMouseClicked = {
-                    val guiPlayer = playerInputs.mapIndexed { index, playerInput ->
-                        val color = playerColors[index]
-                        val playerType = when {
-                            playerEasyBots[index].isChecked -> PlayerType.EASYBOT
-                            playerHardBots[index].isChecked -> PlayerType.HARDBOT
-                            else -> PlayerType.HUMAN
-                        }
-                        println(playerInput.text.trim())
-                        var name =
-                            if (playerInput.text.trim() == "") {
-                                when (index) {
-                                    3 -> "Alice"
-                                    2 -> "Bob"
-                                    1 -> "Cody"
-                                    else -> "Dirk"
-                                }
-                            } else {
-                                playerInput.text.trim()
-
-                            }
-                        if (name.length > MAX_NAME_LENGTH) name = "${name.first().uppercaseChar()}."
-                        entity.Player(name, playerType, true, color)
-
-
-                    }.toMutableList()
-                    val checkedCount = listOf(
-                        flowerGoalTileButton.isChecked,
-                        fruitGoalTileButton.isChecked,
-                        woodGoalTileButton.isChecked,
-                        positionGoalTileButton.isChecked,
-                        leafGoalTileButton.isChecked
-                    ).count { it }
-
-                    if (playerColors.distinct().size == playerColors.size && guiPlayer.size >= 2 && checkedCount == 3) {
-
-                            rootService.gameService.startNewGame(
-                                guiPlayer, false,
-                                selectedGoalTiles
-                            )
-                            bonsaiApplication.hideMenuScene()
-                            bonsaiApplication.showGameScene()
-                        }
-
-                }
-            },
-            playerTurn,
-            playerInput,
-            playerRemove,
-            playerColour,
-            playerEasyBot,
-            playerHardBot,
-        )
-        contentGoalTilePane.addAll(
-            titleGoalTileLabel,
-            titleGoalTileLabel2,
-            woodGoalTileLabel,
-            woodGoalTileButton,
-            leafGoalTileLabel,
-            leafGoalTileButton,
-            fruitGoalTileLabel,
-            fruitGoalTileButton,
-            flowerGoalTileLabel,
-            flowerGoalTileButton,
-            positionGoalTileLabel,
-            positionGoalTileButton,
-            randomGoalTileButton
-        )
-        addComponents(contentPlayerPane, contentGoalTilePane)
-
-        assignColorButtonFunctionality()
-    }
-
-    private fun addPlayer() {
-        val currentIndex = playerInputs.size
-        if (currentIndex >= 4) return
-
-        val newPlayerTurn = createTurnLabel(currentIndex)
-        val newPlayerInput = createTextField(currentIndex)
-        val newPlayerColour = createColourButton(currentIndex)
-        val newPlayerRemove = createRemoveButton(currentIndex)
-        val newPlayerEasyBot = createEasyBotButton(currentIndex)
-        val newPlayerHardBot = createHardBotButton(currentIndex)
-
-        // pane components
-        contentPlayerPane.addAll(
-            newPlayerInput,
-            newPlayerTurn,
-            newPlayerRemove,
-            newPlayerColour,
-            newPlayerEasyBot,
-            newPlayerHardBot,
-        )
-
-        // add player info to respective list
-        playerTurns.add(newPlayerTurn)
-        playerInputs.add(newPlayerInput)
-        playerColours.add(newPlayerColour)
-        playerRemoves.add(newPlayerRemove)
-        playerEasyBots.add(newPlayerEasyBot)
-        playerHardBots.add(newPlayerHardBot)
-
-        if (currentIndex == 3) {
-            addPlayerButton.isDisabled = true
-            addPlayerButton.isVisible = false
-        }
-
-        addPlayerButton.posY += 140
-    }
-
-// helper functions for addPlayer
-
-    private fun createTurnLabel(index: Int) = TurnLabel(
-        posX = 40,
-        posY = 270 + 140 * index,
-    ).apply {
-        text = "${index + 1}"
-        onMouseClicked = { swapPlayerWithNext(index) }
-        onMouseEntered = { highlightPlayers(index) }
-        onMouseExited = { removeHighlight() }
-    }
-
-    private fun createTextField(index: Int) = TextFieldStyle1(
-        posX = 190,
-        posY = 270 + 140 * index,
-        prompt = "INPUT NAME"
-    )
-
-    private fun createColourButton(index: Int) = ColourButton(
-        posX = 600,
-        posY = 280 + 140 * index,
-    ).apply {
-        onMouseClicked = {
-            val currentColor = playerColors[index]
-            val newColor = nextColor(currentColor)
-            playerColors[index] = newColor
-
-            this.visual = ColorVisual(Color(colorMapping[newColor] ?: COLOUR_BLACK)).apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        }
-
-        visual = ColorVisual(Color(colorMapping[playerColors[index]] ?: COLOUR_BLACK)).apply {
-            style.borderRadius = BorderRadius(20.0)
-        }
-    }
-
-    private fun createRemoveButton(index: Int) = SquareButton(
-        posX = 680,
-        posY = 270 + 140 * index,
-    ).apply {
-        onMouseClicked = { removePlayer(index) }
-    }
-
-    private fun createEasyBotButton(index: Int) = CheckBoxButton(
-        posX = 830,
-        posY = 270 + 140 * index,
-    ).apply {
-        onMouseClicked = {
-            if (!isChecked && playerHardBots[index].isChecked) {
-                playerHardBots[index].change()
-            }
-            change()
-        }
-    }
-
-    private fun createHardBotButton(index: Int) = CheckBoxButton(
-        posX = 980,
-        posY = 270 + 140 * index,
-    ).apply {
-        onMouseClicked = {
-            if (!isChecked && playerEasyBots[index].isChecked) {
-                playerEasyBots[index].change()
-            }
-            change()
-        }
-    }
-
-
-    private fun highlightPlayers(index: Int) {
-        val nextIndex = if (index == playerInputs.size - 1) 0 else index + 1
-
-        playerInputs[index].visual = ColorVisual(Color(0xFFFF00)).apply { // Yellow color for highlight
-            style.borderRadius = BorderRadius(20.0)
-        }
-
-        playerInputs[nextIndex].visual = ColorVisual(Color(0x00FF00)).apply { // Green color for highlight
-            style.borderRadius = BorderRadius(20.0)
-        }
-    }
-
-    private fun removeHighlight() {
-        playerInputs.forEach { textField ->
-            textField.visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
-        }
-    }
-
-    private fun removePlayer(index: Int) {
-
-        if (playerInputs.size <= 1) return
-
-        contentPlayerPane.remove(playerTurns[index])
-        contentPlayerPane.remove(playerColours[index])
-        contentPlayerPane.remove(playerRemoves[index])
-        contentPlayerPane.remove(playerEasyBots[index])
-        contentPlayerPane.remove(playerHardBots[index])
-        contentPlayerPane.remove(playerInputs[index])
-
-        playerTurns.removeAt(index)
-        playerColours.removeAt(index)
-        playerRemoves.removeAt(index)
-        playerEasyBots.removeAt(index)
-        playerHardBots.removeAt(index)
-        playerInputs.removeAt(index)
-
-
-        for (i in index until playerInputs.size) {
-            playerTurns[i].posY -= 140
-            playerColours[i].posY -= 140
-            playerRemoves[i].posY -= 140
-            playerEasyBots[i].posY -= 140
-            playerHardBots[i].posY -= 140
-            playerInputs[i].posY -= 140
-
-            playerRemoves[i].onMouseClicked = {
-                removePlayer(i)
-            }
-            playerTurns[i].onMouseEntered = {
-                highlightPlayers(i)
-            }
-            playerTurns[i].onMouseExited = {
-                removeHighlight()
-            }
-        }
-
-        addPlayerButton.isVisible = true
-        addPlayerButton.isDisabled = false
-        addPlayerButton.posY -= 140
-
-    }
-
-    /**
-     * determines which color should be chosen for new player
-     */
-    private fun nextColor(currentColor: ColorType): ColorType {
-        val currentIndex = availableColors.indexOf(currentColor)
-        return if (currentIndex == -1 || currentIndex == availableColors.lastIndex)
-            availableColors.first()
-        else
-            availableColors[currentIndex + 1]
-    }
-
-    /**
-     * changes color to next one on click
-     */
-    private fun assignColorButtonFunctionality() {
-        playerColours.forEachIndexed { index, button ->
-            button.onMouseClicked = {
-                val currentColor = playerColors[index]
-                val newColor = nextColor(currentColor)
-                playerColors[index] = newColor
-
-                // Update the button visual and ensure it stays rounded
-                button.visual = ColorVisual(Color(colorMapping[newColor] ?: COLOUR_BLACK)).apply {
-                    style.borderRadius = BorderRadius(20.0)
-                }
-            }
-        }
-    }
-
-    /**
-     * chooses and selects three goal tiles at random
-     */
-    private fun selectRandomGoalTiles() {
-        val allGoalTiles = GoalTileType.entries.shuffled()
-        val selectedTiles = allGoalTiles.take(3)
-
-        for (goalTile in selectedTiles) {
-            val button = getGoalTileButton(goalTile)
-            button.change()
-
-            selectedGoalTiles.add(goalTile)
-        }
-    }
-
-    /**
-     * clears all goal tiles is used in randomGoalTileButton
-     */
-    private fun clearSelectedGoalTiles() {
-        for (goalTile in selectedGoalTiles) {
-            val button = getGoalTileButton(goalTile)
-            if (button.isChecked) {
-                button.change()
-            }
-        }
-        selectedGoalTiles.clear()
-    }
-
-    /**
-     * returns checkbox status of goals
-     */
-    private fun getGoalTileButton(goalTileType: GoalTileType): CheckBoxButton {
-        return when (goalTileType) {
-            GoalTileType.BROWN -> woodGoalTileButton
-            GoalTileType.GREEN -> leafGoalTileButton
-            GoalTileType.ORANGE -> fruitGoalTileButton
-            GoalTileType.PINK -> flowerGoalTileButton
-            GoalTileType.BLUE -> positionGoalTileButton
-        }
-    }
-
-    /**
-     * toggles selected goals and adds them to a list used in start game
-     */
-    private fun toggleGoalTile(goalTileType: GoalTileType, button: CheckBoxButton) {
-        if (button.isChecked) {
-            if (selectedGoalTiles.size >= 3) {
-                // If 3 goal tiles are already selected, we deselect the first one
-                val firstSelected = selectedGoalTiles.first()
-                val firstButton = when (firstSelected) {
-                    GoalTileType.BROWN -> woodGoalTileButton
-                    GoalTileType.GREEN -> leafGoalTileButton
-                    GoalTileType.ORANGE -> fruitGoalTileButton
-                    GoalTileType.PINK -> flowerGoalTileButton
-                    GoalTileType.BLUE -> positionGoalTileButton
-                }
-                firstButton.change()
-                selectedGoalTiles.remove(firstSelected)
-            }
-            selectedGoalTiles.add(goalTileType)
-        } else {
-            // If the button is being unchecked, remove the goal tile from the selected list
-            selectedGoalTiles.remove(goalTileType)
-        }
-    }
-
-    /**
-     * randomizes the order of the player
-     */
-    private fun randomizePlayerOrder() {
-        val indices = playerInputs.indices.toList().shuffled()
-
-        val shuffledInputs = indices.map { playerInputs[it] }.toMutableList()
-        val shuffledColors = indices.map { playerColors[it] }.toMutableList()
-        val shuffledEasyBots = indices.map { playerEasyBots[it] }.toMutableList()
-        val shuffledHardBots = indices.map { playerHardBots[it] }.toMutableList()
-        val shuffledTurns = indices.map { playerTurns[it] }.toMutableList()
-        val shuffledColours = indices.map { playerColours[it] }.toMutableList()
-        val shuffledRemoves = indices.map { playerRemoves[it] }.toMutableList()
-
-        playerInputs.clear()
-        playerInputs.addAll(shuffledInputs)
-
-        playerColors.clear()
-        playerColors.addAll(shuffledColors)
-
-        playerEasyBots.clear()
-        playerEasyBots.addAll(shuffledEasyBots)
-
-        playerHardBots.clear()
-        playerHardBots.addAll(shuffledHardBots)
-
-        playerTurns.clear()
-        playerTurns.addAll(shuffledTurns)
-
-        playerColours.clear()
-        playerColours.addAll(shuffledColours)
-
-        playerRemoves.clear()
-        playerRemoves.addAll(shuffledRemoves)
-
-        rebindBotHandlers()
-
-        updatePlayerPositions()
-    }
-
-    /**
-     * sets bots to the correct players after randomizing players
-     */
-    private fun rebindBotHandlers() {
-        for (i in playerEasyBots.indices) {
-            playerEasyBots[i].onMouseClicked = {
-                if (!playerEasyBots[i].isChecked) {
-                    if (playerHardBots[i].isChecked) {
-                        playerHardBots[i].change()
-                    }
-                }
-                playerEasyBots[i].change()
-            }
-
-            playerHardBots[i].onMouseClicked = {
-                if (!playerHardBots[i].isChecked) {
-                    if (playerEasyBots[i].isChecked) {
-                        playerEasyBots[i].change()
-                    }
-                }
-                playerHardBots[i].change()
-            }
-        }
-    }
-
-    /**
-     * current players starting position and next players starting position is switched
-     * player 4 is switched with player 1
-     */
-    private fun swapPlayerWithNext(index: Int) {
-        // for player 4
-        val nextIndex = if (index == playerInputs.size - 1) 0 else index + 1
-
-        // Swap the players in all lists
-        swapInList(playerInputs, index, nextIndex)
-        swapInList(playerColors, index, nextIndex)
-        swapInList(playerEasyBots, index, nextIndex)
-        swapInList(playerHardBots, index, nextIndex)
-        swapInList(playerTurns, index, nextIndex)
-        swapInList(playerColours, index, nextIndex)
-        swapInList(playerRemoves, index, nextIndex)
-
-        // update the positions and click handlers
-        updatePlayerPositions()
-        updatePlayerClickHandlers()
-        updateBotHandlers()
-        // highlight the newly swapped players
-        highlightPlayers(index)
-    }
-
-    /**
-     * updates the bot state
-     */
-
-    private fun updateBotHandlers() {
-        for (i in playerEasyBots.indices) {
-            playerEasyBots[i].onMouseClicked = {
-                if (!playerEasyBots[i].isChecked) {
-                    if (playerHardBots[i].isChecked) {
-                        playerHardBots[i].change()
-                    }
-                }
-                playerEasyBots[i].change()
-            }
-
-            playerHardBots[i].onMouseClicked = {
-                if (!playerHardBots[i].isChecked) {
-                    if (playerEasyBots[i].isChecked) {
-                        playerEasyBots[i].change()
-                    }
-                }
-                playerHardBots[i].change()
-            }
-        }
-    }
-
-    /**
-     * updates where the player boxes have to be after swapping the players
-     */
-    private fun updatePlayerPositions() {
-        for (i in playerInputs.indices) {
-
-            playerTurns[i].posY = 270.0 + 140 * i
-            playerInputs[i].posY = 270.0 + 140 * i
-            playerColours[i].posY = 280.0 + 140 * i
-            playerRemoves[i].posY = 270.0 + 140 * i
-            playerEasyBots[i].posY = 270.0 + 140 * i
-            playerHardBots[i].posY = 270.0 + 140 * i
-
-            playerTurns[i].text = "${i + 1}"
-        }
-    }
-
-    /**
-     * help funktion for swap players and highlighting players
-     */
-    private fun updatePlayerClickHandlers() {
-        for (i in playerTurns.indices) {
-            playerTurns[i].onMouseClicked = {
-                swapPlayerWithNext(i)
-            }
-            playerTurns[i].onMouseEntered = {
-                highlightPlayers(i)
-            }
-            playerTurns[i].onMouseExited = {
-                removeHighlight()
-            }
-        }
-    }
-
-    private fun <T> swapInList(list: MutableList<T>, index1: Int, index2: Int) {
-        val temp = list[index1]
-        list[index1] = list[index2]
-        list[index2] = temp
-    }
-
-}
+package guiimport entity.ColorTypeimport entity.GoalTileTypeimport entity.PlayerTypeimport service.RootServiceimport tools.aqua.bgw.components.layoutviews.Paneimport tools.aqua.bgw.components.uicomponents.*import tools.aqua.bgw.core.Colorimport tools.aqua.bgw.core.MenuSceneimport tools.aqua.bgw.style.BorderRadiusimport tools.aqua.bgw.visual.ColorVisualimport tools.aqua.bgw.util.Fontimport tools.aqua.bgw.visual.CompoundVisualimport tools.aqua.bgw.visual.ImageVisualimport util.SECONDARY_COLOURimport util.TERTIARY_COLOURimport util.*const val MAX_NAME_LENGTH = 5/** * The [ConfigureGameMenuScene] is a [MenuScene] to configure the starting parameters * of a game of bonsai in hot seat mode */class ConfigureGameMenuScene(    private val bonsaiApplication: BonsaiApplication,    private val rootService: RootService) :    MenuScene(        1920, 1080, ImageVisual("Backgrounds/background_main.jpg", 1920, 1080)    ), Refreshable {    private val playerColors = mutableListOf(        ColorType.RED,        ColorType.PURPLE,        ColorType.BLACK,        ColorType.BLUE    )    private val availableColors = mutableListOf(        ColorType.RED,        ColorType.PURPLE,        ColorType.BLACK,        ColorType.BLUE    )    private val colorMapping = mapOf(        ColorType.RED to COLOUR_RED,        ColorType.PURPLE to COLOUR_PURPLE,        ColorType.BLACK to COLOUR_BLACK,        ColorType.BLUE to COLOUR_BLUE    )    private val selectedGoalTiles = mutableListOf<GoalTileType>()    private val contentPlayerPane =        Pane<UIComponent>(            posX = 40,            posY = 40,            width = 1100,            height = 1000,            visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {                style.borderRadius = BorderRadius(20.0)                transparency = 0.3            }        )    private val contentGoalTilePane =        Pane<UIComponent>(            posX = 1200,            posY = 40,            width = 680,            height = 1000,            visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {                style.borderRadius = BorderRadius(20.0)                transparency = 0.3            }        )    private val titleLabel =        Label(            posX = 40,            posY = 20,            width = 1000,            height = 100,            text = "CONFIGURE GAME",            font = Font(72, Color(0x000000), "Okashi Regular"),        )    private val titleGoalTileLabel =        Label(            posX = 60,            posY = 20,            width = 500,            height = 100,            text = "CHOOSE 3",            font = Font(42, Color(0x000000), "Okashi Regular"),            )    private val titleGoalTileLabel2 =        Label(            posX = 60,            posY = 80,            width = 500,            height = 100,            text = "GOAL TILES",            font = Font(42, Color(0x000000), "Okashi Regular"),            )    private val woodGoalTileLabel =        Label(            width = 540,            height = 110,            posX = 20,            posY = 200,            visual = ImageVisual("GoalTiles/Brown.png").apply {                style.borderRadius = BorderRadius(20.0)            }        )    private val woodGoalTileButton = CheckBoxButton(        posX = 560,        posY = 200    ).apply {        onMouseClicked = {            change()            toggleGoalTile(GoalTileType.BROWN, this)        }    }    private val leafGoalTileLabel =        Label(            width = 540,            height = 110,            posX = 20,            posY = 330,            visual = ImageVisual("GoalTiles/Green.png").apply {                style.borderRadius = BorderRadius(20.0)            }        )    private val leafGoalTileButton = CheckBoxButton(        posX = 560,        posY = 330    ).apply {        onMouseClicked = {            change()            toggleGoalTile(GoalTileType.GREEN, this)        }    }    private val fruitGoalTileLabel =        Label(            posX = 20,            posY = 460,            width = 540,            height = 110,            visual = ImageVisual("GoalTiles/Orange.png").apply {                style.borderRadius = BorderRadius(20.0)            }        )    private val fruitGoalTileButton = CheckBoxButton(        posX = 560,        posY = 460    ).apply {        onMouseClicked = {            change()            toggleGoalTile(GoalTileType.ORANGE, this)        }    }    private val flowerGoalTileLabel =        Label(            posX = 20,            posY = 590,            width = 540,            height = 110,            visual = ImageVisual("GoalTiles/Pink.png").apply {                style.borderRadius = BorderRadius(20.0)            }        )    private val flowerGoalTileButton = CheckBoxButton(        posX = 560,        posY = 590    ).apply {        onMouseClicked = {            change()            toggleGoalTile(GoalTileType.PINK, this)        }    }    private val positionGoalTileLabel =        Label(            posX = 20,            posY = 720,            width = 540,            height = 110,            visual = ImageVisual("GoalTiles/Blue.png").apply {                style.borderRadius = BorderRadius(20.0)            }        )    private val positionGoalTileButton = CheckBoxButton(        posX = 560,        posY = 720    ).apply {        onMouseClicked = {            change()            toggleGoalTile(GoalTileType.BLUE, this)        }    }    private val randomGoalTileButton =        Button(            posX = 175,            posY = 870,            text = "RANDOM",            width = 330,            height = 110,            font = Font(24.0, Color.WHITE, "Okashi italic", Font.FontWeight.LIGHT),            visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {                style.borderRadius = BorderRadius(20.0)            }        ).apply {            onMouseClicked = {                clearSelectedGoalTiles()                selectRandomGoalTiles()            }        }    private val turnLabel = Label(        posX = 40,        posY = 220,        width = 100,        height = 40,        text = "TURN",        font = Font(30, Color(0x000000), "Okashi italic")    )    private val playerLabel = Label(        posX = 380,        posY = 220,        width = 200,        height = 40,        text = "PLAYER",        font = Font(30, Color(0x000000), "Okashi italic")    )    private val easyLabel = Label(        posX = 830,        posY = 220,        width = 100,        height = 40,        text = "EASY",        font = Font(28, Color(0x000000), "Okashi italic")    )    private val hardLabel = Label(        posX = 980,        posY = 220,        width = 100,        height = 40,        text = "HARD",        font = Font(28, Color(0x000000), "Okashi italic")    )    /**     * deselects all goal tiles and chooses and selects three goal tiles at random     *///    private val randomGoalTileButton = CheckBoxButton(//        posX = 390,//        posY = 870//    ).apply {//        onMouseClicked = {//            clearSelectedGoalTiles()//            selectRandomGoalTiles()//        }//    }    private val addPlayerButton =        Button(            width = 110,            height = 110,            posX = 435,            posY = 410,            visual = CompoundVisual(                ColorVisual(Color(TERTIARY_COLOUR)).apply {                    style.borderRadius = BorderRadius(20.0)                },                ImageVisual("add.png")            ),        ).apply {            onMouseClicked = {                addPlayer()            }        }    private val startButton = ButtonStyle2(        posX = 715,        posY = 830,        text = "START"    )    private val backButton = ButtonStyle2(        posX = 175,        posY = 830,        text = "BACK"    ).apply {        onMouseClicked = {            bonsaiApplication.hideMenuScene()            bonsaiApplication.showMainMenuScene()        }    }    private val playerOrderButton = ButtonStyle2(        posX = 445,        posY = 830,        text = "RANDOM ORDER"    ).apply {        onMouseClicked = {            randomizePlayerOrder()        }    }    private val playerTurn = TurnLabel(        posX = 40,        posY = 270,    ).apply {        text = "1"        onMouseClicked = {            swapPlayerWithNext(0)        }        onMouseEntered = {            highlightPlayers(0)        }        onMouseExited = {            removeHighlight()        }    }    private val playerInput = TextFieldStyle1(        posX = 190,        posY = 270,        prompt = "INPUT NAME"    )    private val playerColour = ColourButton(        posX = 600,        posY = 280    )    private val playerRemove = SquareButton(        posX = 680,        posY = 270    ).apply {        // When the button is clicked, the first player is removed        onMouseClicked = {            removePlayer(0)        }    }    private val playerEasyBot = CheckBoxButton(        posX = 830,        posY = 270    ).apply {        onMouseClicked = {            if (!isChecked) {                if (playerHardBots[0].isChecked) {                    playerHardBots[0].change()                }            }            change()        }    }    private val playerHardBot = CheckBoxButton(        posX = 980,        posY = 270    ).apply {        onMouseClicked = {            if (!isChecked) {                if (playerEasyBots[0].isChecked) {                    playerEasyBots[0].change()                }            }            change()        }    }    // Group all player inputs in lists to easily manage them    private val playerTurns: MutableList<Label> = mutableListOf(playerTurn)    private val playerInputs: MutableList<TextField> = mutableListOf(playerInput)    private val playerColours: MutableList<Button> = mutableListOf(playerColour)    private val playerRemoves: MutableList<Button> = mutableListOf(playerRemove)    private val playerEasyBots: MutableList<CheckBoxButton> = mutableListOf(playerEasyBot)    private val playerHardBots: MutableList<CheckBoxButton> = mutableListOf(playerHardBot)    init {        contentPlayerPane.addAll(            titleLabel,            addPlayerButton,            backButton,            playerOrderButton,            turnLabel,            playerLabel,            easyLabel,            hardLabel,            startButton.apply {                onMouseClicked = {                    val guiPlayer = playerInputs.mapIndexed { index, playerInput ->                        val color = playerColors[index]                        val playerType = when {                            playerEasyBots[index].isChecked -> PlayerType.EASYBOT                            playerHardBots[index].isChecked -> PlayerType.HARDBOT                            else -> PlayerType.HUMAN                        }                        println(playerInput.text.trim())                        var name =                            if (playerInput.text.trim() == "") {                                when (index) {                                    3 -> "Alice"                                    2 -> "Bob"                                    1 -> "Cody"                                    else -> "Dirk"                                }                            } else {                                playerInput.text.trim()                            }                        if (name.length > MAX_NAME_LENGTH) name = name.take(3)                        entity.Player(name, playerType, true, color)                    }.toMutableList()                    val checkedCount = listOf(                        flowerGoalTileButton.isChecked,                        fruitGoalTileButton.isChecked,                        woodGoalTileButton.isChecked,                        positionGoalTileButton.isChecked,                        leafGoalTileButton.isChecked                    ).count { it }                    if (playerColors.distinct().size == playerColors.size && guiPlayer.size >= 2 && checkedCount == 3) {                            rootService.gameService.startNewGame(                                guiPlayer, false,                                selectedGoalTiles                            )                            bonsaiApplication.hideMenuScene()                            bonsaiApplication.showGameScene()                        }                }            },            playerTurn,            playerInput,            playerRemove,            playerColour,            playerEasyBot,            playerHardBot,        )        contentGoalTilePane.addAll(            titleGoalTileLabel,            titleGoalTileLabel2,            woodGoalTileLabel,            woodGoalTileButton,            leafGoalTileLabel,            leafGoalTileButton,            fruitGoalTileLabel,            fruitGoalTileButton,            flowerGoalTileLabel,            flowerGoalTileButton,            positionGoalTileLabel,            positionGoalTileButton,            randomGoalTileButton        )        addComponents(contentPlayerPane, contentGoalTilePane)        assignColorButtonFunctionality()    }    private fun addPlayer() {        val currentIndex = playerInputs.size        if (currentIndex >= 4) return        val newPlayerTurn = createTurnLabel(currentIndex)        val newPlayerInput = createTextField(currentIndex)        val newPlayerColour = createColourButton(currentIndex)        val newPlayerRemove = createRemoveButton(currentIndex)        val newPlayerEasyBot = createEasyBotButton(currentIndex)        val newPlayerHardBot = createHardBotButton(currentIndex)        // pane components        contentPlayerPane.addAll(            newPlayerInput,            newPlayerTurn,            newPlayerRemove,            newPlayerColour,            newPlayerEasyBot,            newPlayerHardBot,        )        // add player info to respective list        playerTurns.add(newPlayerTurn)        playerInputs.add(newPlayerInput)        playerColours.add(newPlayerColour)        playerRemoves.add(newPlayerRemove)        playerEasyBots.add(newPlayerEasyBot)        playerHardBots.add(newPlayerHardBot)        if (currentIndex == 3) {            addPlayerButton.isDisabled = true            addPlayerButton.isVisible = false        }        addPlayerButton.posY += 140    }// helper functions for addPlayer    private fun createTurnLabel(index: Int) = TurnLabel(        posX = 40,        posY = 270 + 140 * index,    ).apply {        text = "${index + 1}"        onMouseClicked = { swapPlayerWithNext(index) }        onMouseEntered = { highlightPlayers(index) }        onMouseExited = { removeHighlight() }    }    private fun createTextField(index: Int) = TextFieldStyle1(        posX = 190,        posY = 270 + 140 * index,        prompt = "INPUT NAME"    )    private fun createColourButton(index: Int) = ColourButton(        posX = 600,        posY = 280 + 140 * index,    ).apply {        onMouseClicked = {            val currentColor = playerColors[index]            val newColor = nextColor(currentColor)            playerColors[index] = newColor            this.visual = ColorVisual(Color(colorMapping[newColor] ?: COLOUR_BLACK)).apply {                style.borderRadius = BorderRadius(20.0)            }        }        visual = ColorVisual(Color(colorMapping[playerColors[index]] ?: COLOUR_BLACK)).apply {            style.borderRadius = BorderRadius(20.0)        }    }    private fun createRemoveButton(index: Int) = SquareButton(        posX = 680,        posY = 270 + 140 * index,    ).apply {        onMouseClicked = { removePlayer(index) }    }    private fun createEasyBotButton(index: Int) = CheckBoxButton(        posX = 830,        posY = 270 + 140 * index,    ).apply {        onMouseClicked = {            if (!isChecked && playerHardBots[index].isChecked) {                playerHardBots[index].change()            }            change()        }    }    private fun createHardBotButton(index: Int) = CheckBoxButton(        posX = 980,        posY = 270 + 140 * index,    ).apply {        onMouseClicked = {            if (!isChecked && playerEasyBots[index].isChecked) {                playerEasyBots[index].change()            }            change()        }    }    private fun highlightPlayers(index: Int) {        val nextIndex = if (index == playerInputs.size - 1) 0 else index + 1        playerInputs[index].visual = ColorVisual(Color(0xFFFF00)).apply { // Yellow color for highlight            style.borderRadius = BorderRadius(20.0)        }        playerInputs[nextIndex].visual = ColorVisual(Color(0x00FF00)).apply { // Green color for highlight            style.borderRadius = BorderRadius(20.0)        }    }    private fun removeHighlight() {        playerInputs.forEach { textField ->            textField.visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {                style.borderRadius = BorderRadius(20.0)            }        }    }    private fun removePlayer(index: Int) {        if (playerInputs.size <= 1) return        contentPlayerPane.remove(playerTurns[index])        contentPlayerPane.remove(playerColours[index])        contentPlayerPane.remove(playerRemoves[index])        contentPlayerPane.remove(playerEasyBots[index])        contentPlayerPane.remove(playerHardBots[index])        contentPlayerPane.remove(playerInputs[index])        playerTurns.removeAt(index)        playerColours.removeAt(index)        playerRemoves.removeAt(index)        playerEasyBots.removeAt(index)        playerHardBots.removeAt(index)        playerInputs.removeAt(index)        for (i in index until playerInputs.size) {            playerTurns[i].posY -= 140            playerColours[i].posY -= 140            playerRemoves[i].posY -= 140            playerEasyBots[i].posY -= 140            playerHardBots[i].posY -= 140            playerInputs[i].posY -= 140            playerRemoves[i].onMouseClicked = {                removePlayer(i)            }            playerTurns[i].onMouseEntered = {                highlightPlayers(i)            }            playerTurns[i].onMouseExited = {                removeHighlight()            }        }        addPlayerButton.isVisible = true        addPlayerButton.isDisabled = false        addPlayerButton.posY -= 140    }    /**     * determines which color should be chosen for new player     */    private fun nextColor(currentColor: ColorType): ColorType {        val currentIndex = availableColors.indexOf(currentColor)        return if (currentIndex == -1 || currentIndex == availableColors.lastIndex)            availableColors.first()        else            availableColors[currentIndex + 1]    }    /**     * changes color to next one on click     */    private fun assignColorButtonFunctionality() {        playerColours.forEachIndexed { index, button ->            button.onMouseClicked = {                val currentColor = playerColors[index]                val newColor = nextColor(currentColor)                playerColors[index] = newColor                // Update the button visual and ensure it stays rounded                button.visual = ColorVisual(Color(colorMapping[newColor] ?: COLOUR_BLACK)).apply {                    style.borderRadius = BorderRadius(20.0)                }            }        }    }    /**     * chooses and selects three goal tiles at random     */    private fun selectRandomGoalTiles() {        val allGoalTiles = GoalTileType.entries.shuffled()        val selectedTiles = allGoalTiles.take(3)        for (goalTile in selectedTiles) {            val button = getGoalTileButton(goalTile)            button.change()            selectedGoalTiles.add(goalTile)        }    }    /**     * clears all goal tiles is used in randomGoalTileButton     */    private fun clearSelectedGoalTiles() {        for (goalTile in selectedGoalTiles) {            val button = getGoalTileButton(goalTile)            if (button.isChecked) {                button.change()            }        }        selectedGoalTiles.clear()    }    /**     * returns checkbox status of goals     */    private fun getGoalTileButton(goalTileType: GoalTileType): CheckBoxButton {        return when (goalTileType) {            GoalTileType.BROWN -> woodGoalTileButton            GoalTileType.GREEN -> leafGoalTileButton            GoalTileType.ORANGE -> fruitGoalTileButton            GoalTileType.PINK -> flowerGoalTileButton            GoalTileType.BLUE -> positionGoalTileButton        }    }    /**     * toggles selected goals and adds them to a list used in start game     */    private fun toggleGoalTile(goalTileType: GoalTileType, button: CheckBoxButton) {        if (button.isChecked) {            if (selectedGoalTiles.size >= 3) {                // If 3 goal tiles are already selected, we deselect the first one                val firstSelected = selectedGoalTiles.first()                val firstButton = when (firstSelected) {                    GoalTileType.BROWN -> woodGoalTileButton                    GoalTileType.GREEN -> leafGoalTileButton                    GoalTileType.ORANGE -> fruitGoalTileButton                    GoalTileType.PINK -> flowerGoalTileButton                    GoalTileType.BLUE -> positionGoalTileButton                }                firstButton.change()                selectedGoalTiles.remove(firstSelected)            }            selectedGoalTiles.add(goalTileType)        } else {            // If the button is being unchecked, remove the goal tile from the selected list            selectedGoalTiles.remove(goalTileType)        }    }    /**     * randomizes the order of the player     */    private fun randomizePlayerOrder() {        val indices = playerInputs.indices.toList().shuffled()        val shuffledInputs = indices.map { playerInputs[it] }.toMutableList()        val shuffledColors = indices.map { playerColors[it] }.toMutableList()        val shuffledEasyBots = indices.map { playerEasyBots[it] }.toMutableList()        val shuffledHardBots = indices.map { playerHardBots[it] }.toMutableList()        val shuffledTurns = indices.map { playerTurns[it] }.toMutableList()        val shuffledColours = indices.map { playerColours[it] }.toMutableList()        val shuffledRemoves = indices.map { playerRemoves[it] }.toMutableList()        playerInputs.clear()        playerInputs.addAll(shuffledInputs)        playerColors.clear()        playerColors.addAll(shuffledColors)        playerEasyBots.clear()        playerEasyBots.addAll(shuffledEasyBots)        playerHardBots.clear()        playerHardBots.addAll(shuffledHardBots)        playerTurns.clear()        playerTurns.addAll(shuffledTurns)        playerColours.clear()        playerColours.addAll(shuffledColours)        playerRemoves.clear()        playerRemoves.addAll(shuffledRemoves)        rebindBotHandlers()        updatePlayerPositions()    }    /**     * sets bots to the correct players after randomizing players     */    private fun rebindBotHandlers() {        for (i in playerEasyBots.indices) {            playerEasyBots[i].onMouseClicked = {                if (!playerEasyBots[i].isChecked) {                    if (playerHardBots[i].isChecked) {                        playerHardBots[i].change()                    }                }                playerEasyBots[i].change()            }            playerHardBots[i].onMouseClicked = {                if (!playerHardBots[i].isChecked) {                    if (playerEasyBots[i].isChecked) {                        playerEasyBots[i].change()                    }                }                playerHardBots[i].change()            }        }    }    /**     * current players starting position and next players starting position is switched     * player 4 is switched with player 1     */    private fun swapPlayerWithNext(index: Int) {        // for player 4        val nextIndex = if (index == playerInputs.size - 1) 0 else index + 1        // Swap the players in all lists        swapInList(playerInputs, index, nextIndex)        swapInList(playerColors, index, nextIndex)        swapInList(playerEasyBots, index, nextIndex)        swapInList(playerHardBots, index, nextIndex)        swapInList(playerTurns, index, nextIndex)        swapInList(playerColours, index, nextIndex)        swapInList(playerRemoves, index, nextIndex)        // update the positions and click handlers        updatePlayerPositions()        updatePlayerClickHandlers()        updateBotHandlers()        // highlight the newly swapped players        highlightPlayers(index)    }    /**     * updates the bot state     */    private fun updateBotHandlers() {        for (i in playerEasyBots.indices) {            playerEasyBots[i].onMouseClicked = {                if (!playerEasyBots[i].isChecked) {                    if (playerHardBots[i].isChecked) {                        playerHardBots[i].change()                    }                }                playerEasyBots[i].change()            }            playerHardBots[i].onMouseClicked = {                if (!playerHardBots[i].isChecked) {                    if (playerEasyBots[i].isChecked) {                        playerEasyBots[i].change()                    }                }                playerHardBots[i].change()            }        }    }    /**     * updates where the player boxes have to be after swapping the players     */    private fun updatePlayerPositions() {        for (i in playerInputs.indices) {            playerTurns[i].posY = 270.0 + 140 * i            playerInputs[i].posY = 270.0 + 140 * i            playerColours[i].posY = 280.0 + 140 * i            playerRemoves[i].posY = 270.0 + 140 * i            playerEasyBots[i].posY = 270.0 + 140 * i            playerHardBots[i].posY = 270.0 + 140 * i            playerTurns[i].text = "${i + 1}"        }    }    /**     * help funktion for swap players and highlighting players     */    private fun updatePlayerClickHandlers() {        for (i in playerTurns.indices) {            playerTurns[i].onMouseClicked = {                swapPlayerWithNext(i)            }            playerTurns[i].onMouseEntered = {                highlightPlayers(i)            }            playerTurns[i].onMouseExited = {                removeHighlight()            }        }    }    private fun <T> swapInList(list: MutableList<T>, index1: Int, index2: Int) {        val temp = list[index1]        list[index1] = list[index2]        list[index2] = temp    }}
