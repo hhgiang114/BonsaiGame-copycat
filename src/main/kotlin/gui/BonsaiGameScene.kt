@@ -60,14 +60,14 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     // button for cultivate
     private val cultivateButton =
         Button(
-            posX = 200, posY = 260,
+            posX = 200, posY = 250,
             width = 150,
-            height = 60,
+            height = 50,
             visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
             text = "Cultivate",
-            font = Font(36, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
+            font = Font(30, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
         ).apply {
             onMouseClicked = {
                 val game = rootService.currentGame?.currentBonsaiGameState
@@ -86,14 +86,14 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     private val endTurnButton =
         Button(
             posX = 380,
-            posY = 260,
+            posY = 250,
             width = 150,
-            height = 60,
+            height = 50,
             visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
             text = "EndTurn",
-            font = Font(36, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
+            font = Font(30, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
         ).apply {
             onMouseClicked = {
                 if (rootService.playerActionService.canEndTurn()) {
@@ -106,14 +106,14 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     private val removeButton =
         Button(
             posX = 20,
-            posY = 260,
-            width = 150,
-            height = 60,
+            posY = 250,
+            width = 160,
+            height = 50,
             visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
             text = "Remove",
-            font = Font(36, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
+            font = Font(30, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
         ).apply {
             onMouseClicked = {
                 // Testing to skip a player's turn
@@ -149,7 +149,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         )
 
     private val nameText = Label(
-        posY = 374, posX = 272,
+        posY = 338, posX = 272,
         width = 134,
         height = 34,
         text = "",
@@ -157,8 +157,8 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     )
 
     // Label for player's tile capacity
-      private val capacityLabel = Pane<UIComponent>(
-        posY = 206,
+    private val capacityLabel = Pane<UIComponent>(
+        posY = 170,
         posX = 272,
         width = 134,
         height = 208,
@@ -229,6 +229,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
             )
         )
     )
+
     //Collected cards
     private val collectedCards = LinearLayout<CardView>(
         posX = 0,
@@ -239,13 +240,13 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     )
 
     private val growthCards = LinearLayout<CardView>(
-        posX = 393, posY = 206,
+        posX = 393, posY = 170,
         width = 319, height = 170,
         spacing = -89
     )
     private val toolCards = LinearLayout<CardView>(
         posX = 165,
-        posY = 206,
+        posY = 170,
         width = 287, height = 170,
         spacing = -154
 
@@ -286,9 +287,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
             posY = 20,
             width = 710,
             height = 420,
-            visual = ColorVisual(255, 255, 255, 0.5).apply {
-                style.borderRadius = BorderRadius(20.0)
-            }
+            visual = ColorVisual(Color.TRANSPARENT)
         ).apply {
             this.add(capacityLabel)
             this.add(nameText)
@@ -305,10 +304,9 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         }
 
 
-
     private val interactionText = Label(
         width = 700,
-        height = 100,
+        height = 70,
         text = "",
         font = Font(30, Color(COLOUR_BLACK), "Okashi Italic"),
         alignment = Alignment.CENTER
@@ -318,9 +316,9 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     private val interactionPane =
         Pane<ComponentView>(
             posX = 20,
-            posY = 340,
+            posY = 310,
             width = 700,
-            height = 100,
+            height = 70,
             visual = ColorVisual(255, 255, 255, 0.5).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
@@ -399,7 +397,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                 style.borderRadius = BorderRadius(20.0)
             },
             text = "Save & Quit",
-            font = Font(36,Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
+            font = Font(30, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
         ).apply {
             onMouseClicked = {
                 val isLocal = rootService.currentGame?.currentBonsaiGameState?.currentPlayer?.isLocal ?: false
@@ -418,9 +416,8 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         posY = 20,
         width = 420,
         height = 1040,
-        visual = ColorVisual(Color.WHITE).apply {
-            style.borderRadius = BorderRadius(20.0)
-        }
+        visual = ColorVisual(Color.TRANSPARENT)
+
     ).apply {
         this.add(undoButton)
         this.add(redoButton)
@@ -444,8 +441,8 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
 
     private val claimButton = Button(
-        posX = 510,
-        posY = 560,
+        posX = 710,
+        posY = 660,
         width = 150,
         height = 80,
         visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
@@ -456,8 +453,8 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     )
 
     private val renounceButton = Button(
-        posX = 190,
-        posY = 560,
+        posX = 1060,
+        posY = 660,
         width = 150,
         height = 80,
         visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
@@ -469,22 +466,24 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
     private val goalTileText = Label(
         text = "You can claim this goal 🎉",
-        posX = 180,
-        posY = 30,
-        height = 60, width = 500,
-        font = Font(30, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
+        posX = 460,
+        posY = 300,
+        height = 100, width = 1000,
+        font = Font(70, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.BOLD)
     )
 
     // pane for claim or renounce goal tile
     private val goalTilePane =
         Pane<ComponentView>(
-            posX = 630,
-            posY = 240,
-            width = 850,
-            height = 700,
-            visual = ColorVisual(Color(0xC4C8AC)).apply {
+//            posX = 1920,
+//            posY = 1080,
+            width = 1920,
+            height = 1080,
+            visual = ColorVisual(Color.WHITE).apply {
                 style.borderRadius = BorderRadius(20.0)
+                transparency = 0.8
             }
+            //0xC4C8AC
         ).apply {
             zIndex = 1
             isVisible = false
@@ -496,46 +495,52 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         }
 
     private val titleText = Label(
-        text = "Choose a tile to claim",
-        posX = 50,
-        posY = 40,
-        height = 60, width = 500,
-        font = Font(40, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
+        text = "Choose a tile to claim: ",
+        posX = 460,
+        posY = 300,
+        height = 100, width = 1000,
+        font = Font(70, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.BOLD)
     )
-    private val leafTile = HexagonView(
-        posY = 200,
-        posX = 120,
-        size = 60,
-        visual = leafTileImageVisual
-    )
+
     private val woodTile = HexagonView(
-        posY = 200,
-        posX = 280,
+        posY = 480,
+        posX = 720,
         size = 60,
         visual = woodTileImageVisual
     )
-    private val fruitTile = HexagonView(
-        posY = 200,
-        posX = 440,
+
+    private val leafTile = HexagonView(
+        posY = 480,
+        posX = 840,
         size = 60,
-        visual = fruitTileImageVisual
+        visual = leafTileImageVisual
     )
+
+
     private val flowerTile = HexagonView(
-        posY = 200,
-        posX = 600,
+        posY = 480,
+        posX = 960,
         size = 60,
         visual = flowerTileImageVisual
+    )
+
+    private val fruitTile = HexagonView(
+        posY = 480,
+        posX = 1080,
+        size = 60,
+        visual = fruitTileImageVisual
     )
 
     // pane for claim or renounce goal tile
     private val choseAnyTilePane =
         Pane<ComponentView>(
-            posX = 535,
-            posY = 240,
-            width = 850,
-            height = 500,
-            visual = ColorVisual(Color(0xC4C8AC)).apply {
+//            posX = 535,
+//            posY = 240,
+            width = 1920,
+            height = 1080,
+            visual = ColorVisual(Color.WHITE).apply {
                 style.borderRadius = BorderRadius(20.0)
+                transparency = 0.8
             }
         ).apply {
             zIndex = 1
@@ -615,7 +620,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         // Refresh goal tile buttons
         goalButtons.forEachIndexed { index, button ->
             val goalTile = goalTileList[index % goalTileList.size]
-            button.text = "Tier: ${goalTile.tier} Score: ${goalTile.score}"
+            button.text = "Tier: ${goalTile.tier}"
         }
 
         // Refresh player buttons
@@ -683,20 +688,16 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
             var color = getColorForPot(player.color)
             val visual: SingleLayerVisual?
             if (it.second == 0) {
-                color = 0x000000
+                color = ColorVisual.TRANSPARENT
             }
             visual = if (it.first == 0 && it.second == 0) {
                 woodTileImageVisual
             } else {
-                ColorVisual(Color(color))
+                color
             }
             val hexagon = HexagonView(
                 visual = CompoundVisual(
-                    visual,
-                    TextVisual(
-                        text = "",
-                        font = Font(10.0, Color(0x000000))
-                    )
+                    visual
                 ),
                 size = 30
             )
@@ -724,14 +725,14 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         )
         treeHexagonGrids.add(treeHexagonGrid)
 
-        //HERE SOME CHANGES TRANSPARENT
         val targetLayout = Pane<ComponentView>(
             width = 2000,
             height = 2000,
             posX = 0, posY = 0,
-//            width = 1260,
-//            height = 560,
-            visual = ColorVisual(Color.WHITE)
+            visual = ColorVisual(Color.WHITE).apply {
+                style.borderRadius = BorderRadius(20.0)
+                transparency = 0.5
+            }
         ).apply {
             this.add(treeHexagonGrid)
         }
@@ -739,12 +740,10 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
         //HIHI
         val treePane = CameraPane(
-            //posX = 240,
             posX = 140,
-            posY = 0,
-            //width = 1320,
+            posY = 40,
             width = 1300,
-            height = 600,
+            height = 630,
             target = targetLayout,
             limitBounds = true
         ).apply {
@@ -949,7 +948,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
         createPlayerButtons()
 
-        var currentY = 20
+        var currentY = 0
 
         // need 6 goal tiles for 2 players and 9 for 3
         val numberOfButtons = if (gameState.players.size == 2) 6 else 9
@@ -958,19 +957,22 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         for (i in 0 until numberOfButtons) {
             val goalTile = sortedGoalTiles[i % sortedGoalTiles.size]
             val goalButton = Button(
-                posX = 85,
+                posX = 93,
                 posY = currentY,
-                width = 250,
-                height = 120,
+                width = 234,
+                height = 110,
+//                width = ImageVisual("GoalTiles/${goalTile.goalTileType}_${goalTile.tier}.png").width,
+//                height = ImageVisual("GoalTiles/${goalTile.goalTileType}_${goalTile.tier}.png").height,
                 visual = ImageVisual("GoalTiles/${goalTile.goalTileType}_${goalTile.tier}.png").apply {
-                    style.borderRadius = BorderRadius(20.0)
+                    style.borderRadius = BorderRadius(10.0)
                 },
                 //text = "Tier: ${goalTile.tier} Score: ${goalTile.score}",
-                //font = Font(30)
+                font = Font(40, Color(0xFFFFFF), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL)
             )
+
             goalButtons.add(goalButton)
             buttonPane.add(goalButton)
-            currentY += 120 + 20
+            currentY += 110 + 5
         }
 
         // add panel to the scene
@@ -992,10 +994,10 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
             }
             var font = Font(15)
             if (gameState.players[i].isLocal) {
-                visual = ColorVisual(Color(0x000000)).apply {
-                    style.borderRadius = BorderRadius(20.0)
+                visual = ColorVisual(Color(TERTIARY_COLOUR)).apply {
+                    style.borderRadius = BorderRadius(10.0)
                 }
-                font = Font(30, Color.WHITE)
+                font = Font(30, Color.WHITE, "Okashi italic")
             }
             // current player needs no buttons
             val player = gameState.players[i]
@@ -1023,7 +1025,6 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                     //update player's collected cards
                     updateCollectedCards(player)
                     updateGrowthCards(player)
-
 
                     //update player's name
                     nameText.text = gameState.players[i].name
@@ -1269,13 +1270,13 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
         val confirmButton = Button(
             posX = 540,
-            posY = -80,
+            posY = -60,
             width = 150,
-            height = 60,
+            height = 50,
             visual = ColorVisual(Color(SECONDARY_COLOUR)).apply {
                 style.borderRadius = BorderRadius(20.0)
             },
-            font = Font(36, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL),
+            font = Font(30, Color(0x000000), "Okashi Regular", fontWeight = Font.FontWeight.NORMAL),
             text = "Finished"
         ).apply {
             onMouseClicked = {
@@ -1357,7 +1358,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         interactionText.text = "You may now place your tiles or end turn"
 
         // update tile capacity
-       // capacityLabel.text = "Capacity: ${game.currentPlayer.tileCapacity}"
+        // capacityLabel.text = "Capacity: ${game.currentPlayer.tileCapacity}"
 
         //update playable tiles
         updatePlayableTiles(game.currentPlayer)
@@ -1399,18 +1400,22 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     override fun refreshAfterClaimGoal(goalTileType: GoalTileType, tier: Int) {
         val game = rootService.currentGame?.currentBonsaiGameState
         checkNotNull(game)
-        var goalTileScore = 0
-
-        for (goalTile in goalTileList) {
-            if (goalTile.goalTileType == goalTileType && goalTile.tier == tier) {
-                goalTileScore = goalTile.score
-            }
-        }
+//        var goalTileScore = 0
+//
+//        for (goalTile in goalTileList) {
+//            if (goalTile.goalTileType == goalTileType && goalTile.tier == tier) {
+//                goalTileScore = goalTile.score
+//            }
+//        }
 
         goalTileList.forEach {
             if (goalTileType == it.goalTileType && tier == it.tier) {
                 goalButtons[goalTileList.indexOf(it)].text =
-                    game.currentPlayer.name + ", Score:  $goalTileScore"
+                    game.currentPlayer.name
+
+//                goalButtons[goalTileList.indexOf(it)].visual.apply {
+//                    opacity = 0.7
+//                }
             }
         }
     }
@@ -1424,7 +1429,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         }
 
         // update tile capacity
-      //  capacityLabel.text = "Capacity: ${game.currentPlayer.tileCapacity}"
+        //  capacityLabel.text = "Capacity: ${game.currentPlayer.tileCapacity}"
 
         // update playable tiles
         updatePlayableTiles(game.currentPlayer)
@@ -1462,7 +1467,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         }
 
         // update tile capacity
-       // capacityLabel.text = "Capacity: ${game.currentPlayer.tileCapacity}"
+        // capacityLabel.text = "Capacity: ${game.currentPlayer.tileCapacity}"
 
         // update playable tiles
         updatePlayableTiles(game.currentPlayer)
@@ -1620,8 +1625,8 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
         overlayPane.add(
             HexagonView(
-                posX = 520, posY = 350,
-                size = 40,
+                posX = 600, posY = 315,
+                size = 30,
                 visual = leafTileImageVisual
             )
                 .apply {
@@ -1638,8 +1643,8 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                 })
         overlayPane.add(
             HexagonView(
-                posX = 520, posY = 350,
-                size = 40,
+                posX = 530, posY = 315,
+                size = 30,
                 visual = woodTileImageVisual
             ).apply {
                 onMouseClicked = {
@@ -1730,10 +1735,6 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
             treeTileMap.add(tile to emptyHex)
             emptyHex.visual = CompoundVisual(
                 getTileImageVisualForTileType(tile.tileType),
-                TextVisual(
-                    text = "",
-                    font = Font(10.0, Color(0x000000))
-                )
             )
             rootService.treeService.playTile(tile, position)
             val parentDeck = comp.parent //as Area<HexagonView>
@@ -1748,7 +1749,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                     getTileImageVisualForTileType(supplyTileType),
                     TextVisual(
                         "${parentDeck.components.size}",
-                        font = Font(30.0, Color(0x000000))
+                        font = Font(30.0, Color(0xFFFFFF), "Okashi Regular")
                     )
                 )
             }
@@ -1762,7 +1763,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                 woodTileImageVisual,
                 TextVisual(
                     "${woodSupplyDecks[getOrder(player)].components.size}",
-                    font = Font(30.0, Color(0x000000))
+                    font = Font(30.0, Color(0xFFFFFF), "Okashi Regular")
                 )
             )
         }
@@ -1772,7 +1773,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                 leafTileImageVisual,
                 TextVisual(
                     "${leafSupplyDecks[getOrder(player)].components.size}",
-                    font = Font(30.0, Color(0x000000))
+                    font = Font(30.0, Color(0xFFFFFF), "Okashi Regular")
                 )
             )
         }
@@ -1782,7 +1783,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                 flowerTileImageVisual,
                 TextVisual(
                     "${flowerSupplyDecks[getOrder(player)].components.size}",
-                    font = Font(30.0, Color(0x000000))
+                    font = Font(30.0, Color(0xFFFFFF), "Okashi Regular")
                 )
             )
         }
@@ -1792,7 +1793,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
                 fruitTileImageVisual,
                 TextVisual(
                     "${fruitSupplyDecks[getOrder(player)].components.size}",
-                    font = Font(30.0, Color(0x000000))
+                    font = Font(30.0, Color(0xFFFFFF), "Okashi Regular")
                 )
             )
         }
@@ -1829,21 +1830,21 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
     private fun updateGoals(goalTileType: GoalTileType, tier: Int) {
         val game = rootService.currentGame?.currentBonsaiGameState
         checkNotNull(game)
-        var goalTileScore = 0
-
-        for (goalTile in goalTileList) {
-            if (goalTile.goalTileType == goalTileType && goalTile.tier == tier) {
-                goalTileScore = goalTile.score
-            }
-        }
+//        var goalTileScore = 0
+//
+//        for (goalTile in goalTileList) {
+//            if (goalTile.goalTileType == goalTileType && goalTile.tier == tier) {
+//                goalTileScore = goalTile.score
+//            }
+//        }
 
         //addComponents(goalTilePane)
         goalTilePane.add(
             Label(
-                posX = 75,
-                posY = 130,
-                width = 700,
-                height = 400,
+                posX = 784,
+                posY = 450,
+                width = 351,
+                height = 165,
                 visual = ImageVisual("GoalTiles/${goalTileType}_${tier}.png"),
             )
 
@@ -1860,7 +1861,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
             goalTileList.forEach {
                 if (goalTileType == it.goalTileType && tier == it.tier) {
                     goalButtons[goalTileList.indexOf(it)].text =
-                        game.currentPlayer.name + ", Score:  $goalTileScore"
+                        game.currentPlayer.name
                 }
             }
         }
@@ -1890,12 +1891,21 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         }
     }
 
-    private fun getColorForPot(color: ColorType): Int {
+//    private fun getColorForPot(color: ColorType): Int {
+//        return when (color) {
+//            ColorType.RED -> COLOUR_RED
+//            ColorType.PURPLE -> COLOUR_PURPLE
+//            ColorType.BLACK -> COLOUR_BLACK
+//            ColorType.BLUE -> COLOUR_BLUE
+//        }
+//    }
+
+    private fun getColorForPot(color: ColorType): ColorVisual {
         return when (color) {
-            ColorType.RED -> COLOUR_RED
-            ColorType.PURPLE -> COLOUR_PURPLE
-            ColorType.BLACK -> COLOUR_BLACK
-            ColorType.BLUE -> COLOUR_BLUE
+            ColorType.RED -> ColorVisual(Color(COLOUR_RED))
+            ColorType.PURPLE -> ColorVisual(Color(COLOUR_PURPLE))
+            ColorType.BLACK -> ColorVisual(Color(COLOUR_BLACK))
+            ColorType.BLUE -> ColorVisual(Color(COLOUR_BLUE))
         }
     }
 
@@ -1910,7 +1920,7 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         return -1
     }
 
-    //Don't really need
+//Don't really need
 //    private fun updateCapacity(player: Player) {
 //        capacityLabel.text = "Capacity: ${player.tileCapacity}"
 //    }
@@ -2012,15 +2022,10 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
 
     private fun updateToolCards(player: Player) {
         toolCards.clear()
-//        val columns = 4
 
-        player.collectedCards.forEachIndexed { index, card ->
-//            val row = index / columns
-//            val col = index % columns
+        player.collectedCards.forEachIndexed { _, card ->
             if (card.cardType == CardType.TOOLCARD) {
                 val cardView = CardView(
-//                    posX = (col * 75).toDouble(),
-//                    posY = (row * 100).toDouble(),
                     height = 170,
                     width = 121.62,
                     back = ImageVisual("ZenCards/${card.id}.png").apply {
@@ -2040,22 +2045,27 @@ class BonsaiGameScene(private val rootService: RootService, private val bonsaiAp
         collectedCards.clear()
 
         val currentPlayer = rootService.currentGame?.currentBonsaiGameState?.currentPlayer
-        val columns = 4
+        val columns = 1
 
         player.collectedCards.forEachIndexed { index, card ->
 
             val row = index / columns
-            val col = index % columns
+            //val col = index % columns
             if (card.cardType == CardType.PARCHMENTCARD
                 || card.cardType == CardType.MASTERCARD
-                || card.cardType == CardType.HELPERCARD) {
+                || card.cardType == CardType.HELPERCARD
+            ) {
                 val cardView = CardView(
-                    posX = (col * 75).toDouble(),
+                    //posX = (col * 75).toDouble(),
                     posY = (row * 100).toDouble(),
                     height = 100,
                     width = 75,
-                    front = ImageVisual("ZenCards/${card.id}.png"),
-                    back = zenCardsBack,
+                    front = ImageVisual("ZenCards/${card.id}.png").apply {
+                        style.borderRadius = BorderRadius(10.0)
+                    },
+                    back = zenCardsBack.apply {
+                        style.borderRadius = BorderRadius(10.0)
+                    },
                 ).apply {
                     showBack()
                     onMouseClicked = {
