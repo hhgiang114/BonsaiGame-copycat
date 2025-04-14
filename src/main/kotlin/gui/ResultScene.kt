@@ -28,7 +28,7 @@ class ResultScene(
         800,
         210,
         "RESULT",
-        font = Font(164.0, Color(0x000000), "Arial Black", Font.FontWeight.BOLD),
+        font = Font(164.0, Color(0x000000), "Okashi Regular", Font.FontWeight.BOLD),
     )
 
     // Display winner
@@ -36,7 +36,7 @@ class ResultScene(
         text = "Winner",
         width = 680, height = 130, posX = 1060, posY = 850,
         alignment = Alignment.CENTER,
-        font = Font(size = 70)
+        font = Font(size = 70, Color(0x000000), "Okashi Regular", Font.FontWeight.NORMAL)
     )
 
     // Button to quit the game
@@ -72,21 +72,21 @@ class ResultScene(
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.BOLD),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.BOLD),
                 formatFunction = { player -> player.name }
             ),
             // Column for leaf scores
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.NORMAL),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.NORMAL),
                 formatFunction = { player -> player.eachScore[0].toString() }
             ),
             // Column for leaf scores
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.NORMAL),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.NORMAL),
                 formatFunction = { player -> player.eachScore[1].toString() }
 
             ),
@@ -94,14 +94,14 @@ class ResultScene(
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.NORMAL),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.NORMAL),
                 formatFunction = { player -> player.eachScore[2].toString() }
             ),
             // Column for goal scores
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.NORMAL),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.NORMAL),
                 formatFunction = { player -> player.eachScore[3].toString() }
 
             ),
@@ -110,7 +110,7 @@ class ResultScene(
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.NORMAL),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.NORMAL),
                 formatFunction = { player -> player.eachScore[4].toString() }
 
             ),
@@ -118,7 +118,7 @@ class ResultScene(
             TableColumn(
                 title = "",
                 width = 124,
-                font = Font(40, Color(0x000000), "Arial", Font.FontWeight.BOLD),
+                font = Font(40, Color(0x000000), "Okashi italic", Font.FontWeight.BOLD),
                 formatFunction = { player -> player.eachScore[5].toString() }
             )
         ),
